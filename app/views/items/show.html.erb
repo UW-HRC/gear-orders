@@ -1,0 +1,48 @@
+<p id="notice"><%= notice %></p>
+
+<div class="row">
+  <div class="col-md-12">
+    <h1><%= @item.name %></h1>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <p><%= @item.description %></p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-12">
+    <h4>Sizes</h4>
+    <table class="table">
+      <thead>
+      <tr>
+        <th>Total Quantity</th>
+        <th>Quantity Available</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Quantity Enabled</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.item_sizes.each do |size| %>
+      <tr>
+        <td><%= size.quantity %></td>
+        <td><%= size.quantity - sum_item_size_purchases(size) %></td>
+        <td><%= size.name %></td>
+        <td><%= number_to_currency size.price %></td>
+        <td><%= size.has_quantity %></td>
+        <th><%= link_to 'Edit', edit_item_item_size_path(@item, size) %></th>
+      </tr>
+      <% end %>
+      </tbody>
+    </table>
+
+    <%= link_to 'New Size', new_item_item_size_path(@item.id) %>
+  </div>
+</div>
+
+<%= link_to 'Edit', edit_item_path(@item) %> |
+<%= link_to 'Back', items_path %>

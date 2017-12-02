@@ -1,0 +1,32 @@
+<%= form_with(model: purchase, url: purchase.new_record? ? order_purchases_path : order_path, local: true) do |form| %>
+  <% if purchase.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(purchase.errors.count, "error") %> prohibited this purchase from being saved:</h2>
+
+      <ul>
+      <% purchase.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <p>Select the item, size, and quantity you'd like to add:</p>
+
+  <div class="row">
+    <div class="col">
+      <%= form.label :quantity %>
+      <%= form.number_field :quantity, id: 'purchase_quantity', class: 'form-control' %>
+    </div>
+    <div class="col">
+      <div class="form-group">
+        <%= form.label :item_size_id, 'Item and Size' %>
+        <%= form.select :item_size_id, option_groups_from_collection_for_select(@items, :item_sizes, :name, :id, :name, params.dig(:purchase, :item_size_id)), {include_blank: true}, {class: 'form-control', id: 'purchase_item_size_id'} %>
+      </div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <%= form.submit 'Add Item', class: 'btn btn-primary' %>
+  </div>
+<% end %>

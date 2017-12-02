@@ -1,0 +1,59 @@
+<p id="notice"><%= notice %></p>
+
+<div class="row">
+  <div class="col-md-12">
+    <h1>Order for <%= @order.first_name %> <%= @order.last_name %></h1>
+    <% if @order.confirmed? %>
+        <div class="alert alert-success">
+          Your order has been finalized! Please bring payment via check, or by sending the grand total amount to <b>@huskyrunningclub</b> on Venmo.
+          <br>
+          We will let you know once gear orders come in!
+        </div>
+        <% else %>
+        <div class="alert alert-info">
+          Add items to your order by clicking the "add new item" link below. You can update your name or email addres anytime by clicking "change my information." Once you're safisfied, click "finalize order."
+        </div>
+        <% end %>
+    <table class="table">
+      <thead>
+      <tr>
+        <th style="width: 100px;">Quantity</th>
+        <th style="width: 100px;">Price</th>
+        <th>Item</th>
+        <th>Size</th>
+        <th>Total Price</th>
+        <% unless @order.confirmed? %>
+        <th>Actions</th>
+            <% end %>
+      </tr>
+      </thead>
+      <tbody>
+      <% @order.purchases.each do |p| %>
+          <tr>
+            <td><%= p.quantity %></td>
+            <td><%= number_to_currency p.item_size.price %></td>
+            <td><%= p.item_size.item.name %></td>
+            <td><%= p.item_size.name %></td>
+            <td><%= number_to_currency(p.item_size.price * p.quantity) %></td>
+            <% unless @order.confirmed? %>
+            <td><%= link_to 'Remove', order_purchase_path(p.order, p), method: :delete, 'data-confirm': 'Are you sure?' %></td>
+                <% end %>
+          </tr>
+      <% end %>
+      </tbody>
+    </table>
+
+    <h4>Grand Total: <%= number_to_currency @order.purchases.reduce(0) {|acc, p| acc + (p.item_size.price * p.quantity)} %></h4>
+
+    <% unless @order.confirmed? %>
+    <%= link_to 'Add new item', new_order_purchase_path(@order) %> <br>
+    <%= link_to 'Change my information', edit_order_path(@order) %>
+        <br><br>
+        <p>
+          <%= link_to 'Finalize order', finalize_order_path(@order), method: :patch, class: 'text-right', 'data-confirm': 'Once you finalize this order, you will be unable to change it. Are you sure?' %>
+        </p>
+    <% end %>
+  </div>
+</div>
+
+
