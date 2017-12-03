@@ -14,7 +14,11 @@
     <a href="/" class="navbar-brand">HRC Gear Order System</a>
     <ul class="navbar-nav">
       <li class="nav-item"><%= link_to 'Order Gear', new_order_path, class: 'nav-link' %></li>
-      <li class="nav-item"><a href="#" class="nav-link">Check Order Status</a></li>
+      <!--<li class="nav-item"><a href="#" class="nav-link">Check Order Status</a></li>-->
+      <% if user_signed_in? %>
+          <li class="nav-item"><%= link_to 'Sign Out', destroy_user_session_path, class: 'nav-link', method: :delete %></li>
+      <li class="navbar-text">Signed in as <%= current_user.email %></li>
+      <% end %>
     </ul>
   </div>
 </nav>

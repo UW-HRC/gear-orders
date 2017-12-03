@@ -29,12 +29,6 @@
       <%= form.number_field :quantity, id: 'item_size_quantity', class: 'form-control', placeholder: 'Quantity Available', step: 1 %>
     </div>
 
-    <div class="form-check">
-      <label for="item_size_has_quantity" class="form-check-label">
-        <%= form.check_box :has_quantity, id: 'item_size_has_quantity', class: 'form-check-input', checked: true %>Do not allow orders to be placed when quantity is 0 (it's reasonable to leave this checked)
-      </label>
-    </div>
-
   <div class="actions">
     <%= form.submit class: 'btn btn-primary' %>
   </div>

@@ -1,5 +1,5 @@
 class PurchasesController < ApplicationController
-  before_action :set_purchase, only: [:show, :edit, :update, :destroy]
+  before_action :set_purchase, only: [:show, :edit, :update, :destroy, :update_quantity]
   before_action :get_items, only: [:new, :create, :edit, :update]
 
   # GET /purchases
@@ -20,8 +20,9 @@ class PurchasesController < ApplicationController
   end
 
   # GET /purchases/1/edit
-  def edit
-  end
+  # def edit
+  #   set_order
+  # end
 
   # POST /purchases
   # POST /purchases.json
@@ -43,17 +44,18 @@ class PurchasesController < ApplicationController
 
   # PATCH/PUT /purchases/1
   # PATCH/PUT /purchases/1.json
-  def update
-    respond_to do |format|
-      if @purchase.update(purchase_params)
-        format.html { redirect_to @order, notice: 'Purchase was successfully updated.' }
-        format.json { render :show, status: :ok, location: @purchase }
-      else
-        format.html { render :edit }
-        format.json { render json: @purchase.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  # def update
+  #   set_order
+  #   respond_to do |format|
+  #     if @purchase.update(purchase_params)
+  #       format.html { redirect_to @order, notice: 'Purchase was successfully updated.' }
+  #       format.json { render :show, status: :ok, location: @purchase }
+  #     else
+  #       format.html { render :edit }
+  #       format.json { render json: @purchase.errors, status: :unprocessable_entity }
+  #     end
+  #   end
+  # end
 
   # DELETE /purchases/1
   # DELETE /purchases/1.json

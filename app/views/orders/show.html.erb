@@ -1,4 +1,4 @@
-<p id="notice"><%= notice %></p>
+<%= provide(:title, "HRC Order for #{@order.first_name} #{@order.last_name}") %>
 
 <div class="row">
   <div class="col-md-12">
@@ -36,14 +36,20 @@
             <td><%= p.item_size.name %></td>
             <td><%= number_to_currency(p.item_size.price * p.quantity) %></td>
             <% unless @order.confirmed? %>
-            <td><%= link_to 'Remove', order_purchase_path(p.order, p), method: :delete, 'data-confirm': 'Are you sure?' %></td>
-                <% end %>
+            <td>
+              <%= link_to 'Remove', order_purchase_path(p.order, p), method: :delete, 'data-confirm': 'Are you sure?' %>
+            </td>
+            <% end %>
           </tr>
       <% end %>
       </tbody>
     </table>
 
-    <h4>Grand Total: <%= number_to_currency @order.purchases.reduce(0) {|acc, p| acc + (p.item_size.price * p.quantity)} %></h4>
+    <% total =  @order.purchases.reduce(0) {|acc, p| acc + (p.item_size.price * p.quantity)} %>
+
+    <h4>Grand total: <%= number_to_currency total %></h4>
+    <h5>You've paid: <%= number_to_currency @order.amount_paid %></h5>
+    <h5>Amount due: <%= number_to_currency total - @order.amount_paid %></h5>
 
     <% unless @order.confirmed? %>
     <%= link_to 'Add new item', new_order_purchase_path(@order) %> <br>

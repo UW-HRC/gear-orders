@@ -1,5 +1,6 @@
 class ItemSizesController < ApplicationController
   before_action :set_item_size, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!
 
   # GET /item_sizes
   # GET /item_sizes.json
@@ -74,6 +75,6 @@ class ItemSizesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def item_size_params
-      params.fetch(:item_size, {}).permit(:name, :price, :quantity, :has_quantity)
+      params.fetch(:item_size, {}).permit(:name, :price, :quantity)
     end
 end

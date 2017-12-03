@@ -1,5 +1,3 @@
-<p id="notice"><%= notice %></p>
-
 <div class="row">
   <div class="col-md-12">
     <h1><%= @item.name %></h1>
@@ -22,7 +20,6 @@
         <th>Quantity Available</th>
         <th>Name</th>
         <th>Price</th>
-        <th>Quantity Enabled</th>
         <th>Actions</th>
       </tr>
       </thead>
@@ -33,7 +30,6 @@
         <td><%= size.quantity - sum_item_size_purchases(size) %></td>
         <td><%= size.name %></td>
         <td><%= number_to_currency size.price %></td>
-        <td><%= size.has_quantity %></td>
         <th><%= link_to 'Edit', edit_item_item_size_path(@item, size) %></th>
       </tr>
       <% end %>
