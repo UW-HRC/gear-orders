@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171203003258) do
+ActiveRecord::Schema.define(version: 20171203111007) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,13 +40,21 @@ ActiveRecord::Schema.define(version: 20171203003258) do
   end
 
   create_table "orders", force: :cascade do |t|
-    t.decimal "amount_paid", precision: 10, scale: 2, default: "0.0"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "confirmed", default: false
     t.string "first_name"
     t.string "last_name"
     t.string "email"
+  end
+
+  create_table "payments", force: :cascade do |t|
+    t.bigint "order_id"
+    t.decimal "amount", precision: 10, scale: 2
+    t.string "method"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["order_id"], name: "index_payments_on_order_id"
   end
 
   create_table "purchases", force: :cascade do |t|
@@ -76,4 +84,5 @@ ActiveRecord::Schema.define(version: 20171203003258) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "payments", "orders"
 end

@@ -7,6 +7,8 @@
         <div class="alert alert-success">
           Your order has been finalized! Please bring payment via check, or by sending the grand total amount to <b>@huskyrunningclub</b> on Venmo.
           <br>
+          Once you make a payment, the amount should be updated here within a day or so. You can check the status of this order by visiting this link.
+          <br>
           We will let you know once gear orders come in!
         </div>
         <% else %>
@@ -46,19 +48,42 @@
     </table>
 
     <% total =  @order.purchases.reduce(0) {|acc, p| acc + (p.item_size.price * p.quantity)} %>
-
+  </div>
+</div>
+<div class="row">
+  <div class="col">
     <h4>Grand total: <%= number_to_currency total %></h4>
-    <h5>You've paid: <%= number_to_currency @order.amount_paid %></h5>
     <h5>Amount due: <%= number_to_currency total - @order.amount_paid %></h5>
 
     <% unless @order.confirmed? %>
-    <%= link_to 'Add new item', new_order_purchase_path(@order) %> <br>
-    <%= link_to 'Change my information', edit_order_path(@order) %>
+        <%= link_to 'Add new item', new_order_purchase_path(@order) %> <br>
+        <%= link_to 'Change my information', edit_order_path(@order) %>
         <br><br>
         <p>
           <%= link_to 'Finalize order', finalize_order_path(@order), method: :patch, class: 'text-right', 'data-confirm': 'Once you finalize this order, you will be unable to change it. Are you sure?' %>
         </p>
     <% end %>
+  </div>
+  <div class="col">
+    <p>Payment History</p>
+    <table class="table table-sm">
+      <thead>
+      <tr>
+        <th>Date</th>
+        <th>Amount</th>
+        <th>Method</th>
+      </tr>
+      </thead>
+    </table>
+    <tbody>
+    <% @order.payments.each do |p| %>
+    <tr>
+      <td><%= p.created_at.strftime('%B %d, %Y') %></td>
+      <td><%= number_to_currency p.amount %></td>
+      <td><%= p.method %></td>
+    </tr>
+    <% end %>
+    </tbody>
   </div>
 </div>
 

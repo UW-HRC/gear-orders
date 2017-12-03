@@ -3,6 +3,7 @@
     <p>Welcome, <%= current_user.email %>. Here are some things you can do:</p>
     <ul>
       <li><%= link_to 'Edit Items for Sale', items_path %></li>
+      <li><%= link_to 'View Orders', orders_path %></li>
     </ul>
 
     <% else %>
