@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   patch '/orders/:id/finalize', to: 'orders#finalize', as: 'finalize_order'
   patch '/orders/:id/unfinalize', to: 'orders#unfinalize', as: 'unfinalize_order'
+  patch '/orders/:id/toggle_fulfilled', to: 'orders#toggle_fulfilled', as: 'toggle_fulfilled'
 
   resources :orders do
     resources :purchases

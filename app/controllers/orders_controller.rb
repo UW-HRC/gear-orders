@@ -1,6 +1,6 @@
 class OrdersController < ApplicationController
   before_action :set_order, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!, only: [:index, :unfinalize, :destroy]
+  before_action :authenticate_user!, only: [:index, :unfinalize, :destroy, :toggle_fulfilled]
 
   # GET /orders
   # GET /orders.json
@@ -63,7 +63,7 @@ class OrdersController < ApplicationController
   def destroy
    if @order.payments.size > 0
      respond_to do |format|
-       format.html { redirect_to orders_url, notice: 'Payment have been made on this order. Please remove them before removing the order.' }
+       format.html { redirect_to orders_url, alert: 'Payment have been made on this order. Please remove them before removing the order.' }
        format.json { head :no_content }
      end
      return
@@ -76,6 +76,17 @@ class OrdersController < ApplicationController
     end
   end
 
+  def toggle_fulfilled
+    set_order
+
+    if @order.confirmed? && @order.total - @order.amount_paid == 0
+      @order.update_attributes fulfilled: !@order.fulfilled
+      redirect_to orders_path, notice: 'Updated successfully.'
+    else
+      redirect_to orders_path, alert: 'Order must be finalized and fully paid first.'
+    end
+  end
+
   def finalize
     set_order
     @order.update_attributes confirmed: true
@@ -84,8 +95,14 @@ class OrdersController < ApplicationController
 
   def unfinalize
     set_order
-    @order.update_attributes confirmed: false
-    redirect_to @order, notice: 'Unfinalized successfully.'
+
+    if @order.fulfilled?
+      redirect_to @order, alert: 'You cannot un-finalize a fulfilled order.'
+    else
+      @order.update_attributes confirmed: false
+      redirect_to @order, notice: 'Unfinalized successfully.'
+
+    end
   end
 
   private

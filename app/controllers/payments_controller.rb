@@ -18,9 +18,14 @@ class PaymentsController < ApplicationController
   def destroy
     set_payment
     set_order
-    @payment.destroy
-    respond_to do |f|
-      f.html { redirect_to @order, notice: 'Payment was successfully destroyed.' }
+
+    if @payment.order.fulfilled?
+      redirect_to @order, alert: 'You cannot remove payments on a fulfilled order.'
+    else
+      @payment.destroy
+      respond_to do |f|
+        f.html { redirect_to @order, notice: 'Payment was successfully destroyed.' }
+      end
     end
   end
 

@@ -61,10 +61,13 @@ class PurchasesController < ApplicationController
   # DELETE /purchases/1.json
   def destroy
     set_order
-    @purchase.destroy
-    respond_to do |format|
-      format.html { redirect_to @order, notice: 'Purchase was successfully destroyed.' }
-      format.json { head :no_content }
+    if @purchase.order.fulfilled?
+      redirect_to @order, alert: 'You cannot remove items on a fulfilled order.'
+    else
+      @purchase.destroy
+      respond_to do |f|
+        f.html { redirect_to @order, notice: 'Item was successfully destroyed.' }
+      end
     end
   end
 

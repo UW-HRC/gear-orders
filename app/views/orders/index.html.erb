@@ -14,6 +14,7 @@
     <table class="table">
       <thead>
       <th>Finalized</th>
+      <th>Fulfilled</th>
       <th>Name</th>
       <th>Created</th>
       <th>Updated</th>
@@ -25,7 +26,8 @@
       <tbody>
       <% @orders.each do |o| %>
           <tr>
-            <td><%= o.confirmed? ? 'Yes' : 'No' %></td>
+            <td><%= o.confirmed? ? '<span class=\'text-success\'>Yes'.html_safe : 'No' %></td>
+            <td><%= link_to o.fulfilled? ? 'Yes' : 'No', toggle_fulfilled_path(o), method: :patch %></td>
             <td><%= link_to o.full_name, o %></td>
             <td><%= o.created_at.strftime '%B %d, %Y' %></td>
             <td><%= o.updated_at.strftime '%B %d, %Y' %></td>
