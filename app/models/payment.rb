@@ -2,7 +2,7 @@ class Payment < ApplicationRecord
   belongs_to :order
   validates_presence_of :method, :amount
 
-  validate :validate_amount
+  # validate :validate_amount
 
   def validate_amount
     return unless self.amount
