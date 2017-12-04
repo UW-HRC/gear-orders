@@ -1,11 +1,11 @@
 class OrdersController < ApplicationController
   before_action :set_order, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!, only: [:index]
+  before_action :authenticate_user!, only: [:index, :unfinalize, :destroy]
 
   # GET /orders
   # GET /orders.json
   def index
-    @orders = Order.all
+    @orders = params[:only_final] ? Order.where(confirmed: true) : Order.all
   end
 
   # GET /orders/1
@@ -61,6 +61,14 @@ class OrdersController < ApplicationController
   # DELETE /orders/1
   # DELETE /orders/1.json
   def destroy
+   if @order.payments.size > 0
+     respond_to do |format|
+       format.html { redirect_to orders_url, notice: 'Payment have been made on this order. Please remove them before removing the order.' }
+       format.json { head :no_content }
+     end
+     return
+   end
+
     @order.destroy
     respond_to do |format|
       format.html { redirect_to orders_url, notice: 'Order was successfully destroyed.' }
@@ -71,7 +79,13 @@ class OrdersController < ApplicationController
   def finalize
     set_order
     @order.update_attributes confirmed: true
-    redirect_to @order
+    redirect_to @order, notice: 'Finalized successfully.'
+  end
+
+  def unfinalize
+    set_order
+    @order.update_attributes confirmed: false
+    redirect_to @order, notice: 'Unfinalized successfully.'
   end
 
   private

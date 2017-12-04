@@ -21,7 +21,7 @@
     <div class="col">
       <div class="form-group">
         <%= form.label :item_size_id, 'Item and Size' %>
-        <%= form.select :item_size_id, option_groups_from_collection_for_select(@items, :item_sizes, :name, :id, lambda {|p| "#{p.name} (#{p.quantity_available} available)" }, params.dig(:purchase, :item_size_id)), {include_blank: true}, {class: 'form-control', id: 'purchase_item_size_id'} %>
+        <%= form.select :item_size_id, option_groups_from_collection_for_select(@items, :item_sizes, :name, :id, lambda {|p| "#{p.name} (#{p.quantity_available} available at #{number_to_currency p.price})" }, params.dig(:purchase, :item_size_id)), {include_blank: true}, {class: 'form-control', id: 'purchase_item_size_id'} %>
       </div>
     </div>
   </div>

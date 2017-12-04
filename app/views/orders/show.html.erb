@@ -54,15 +54,18 @@
 </div>
 <div class="row">
   <div class="col">
-    <h4>Grand total: <%= number_to_currency @order.total %></h4>
-    <h5>Amount due: <%= number_to_currency @order.total - @order.amount_paid %></h5>
-
     <% unless @order.confirmed? %>
         <%= link_to 'Add new item', new_order_purchase_path(@order) %> <br>
         <%= link_to 'Change my information', edit_order_path(@order) %>
         <br><br>
         <p>
-          <%= link_to 'Finalize order', finalize_order_path(@order), method: :patch, class: 'text-right', 'data-confirm': 'Once you finalize this order, you will be unable to change it. Are you sure?' %>
+          <%= link_to 'Finalize order', finalize_order_path(@order), method: :patch, 'data-confirm': 'Once you finalize this order, you will be unable to change it. Are you sure?' %>
+        </p>
+    <% end %>
+
+    <% if @order.confirmed? && user_signed_in? %>
+        <p>
+          <%= link_to 'Un-finalize Order', unfinalize_order_path(@order), method: :patch %>
         </p>
     <% end %>
 
@@ -71,47 +74,63 @@
     <% end %>
   </div>
   <div class="col">
-    <p>Payment History</p>
-    <table class="table table-sm">
-      <thead>
-      <tr>
-        <th>Date</th>
-        <th>Amount</th>
-        <th>Method</th>
-        <th>Actions</th>
-      </tr>
-      </thead>
-      <tbody>
-      <% @order.payments.each do |p| %>
+
+    <div class="card bg-light border-primary">
+      <div class="card-header">
+        Payment History
+      </div>
+      <div class="card-body">
+        <table class="table table-sm">
+          <thead>
           <tr>
-            <td><%= p.created_at.strftime('%B %d, %Y') %></td>
-            <td><%= number_to_currency p.amount %></td>
-            <td><%= p.method %></td>
-            <td><%= link_to 'Delete', order_payment_path(@order, p), method: :delete, 'data-confirm': 'Are you sure you want to delete this payment?' %></td>
-          </tr>
-      <% end %>
-      </tbody>
-    </table>
-    <% if user_signed_in? %>
-        <p>Add Payment</p>
-        <%= form_with model: @order.payments.build, url: order_payments_path(@order.id), local: true, html: {class: 'form-inline'} do |f| %>
-            <%= f.label :amount, class: 'sr-only' %>
-
-            <div class="input-group">
-              <div class="input-group-addon">$</div>
-              <%= f.number_field :amount, placeholder: 'Amount', step: 0.01, class: 'form-control', id: 'payment_amount' %>
-            </div>
-
-            <%= f.label :method, class: 'sr-only' %>
-            <%= f.select :method, {}, {}, {class: 'form-control mr-sm-3 ml-sm-3', id: 'payment_method'} do %>
-                <option value="" disabled selected>Method</option>
-                <option value="Venmo">Venmo</option>
-                <option value="Cash">Cash</option>
-                <option value="Check">Check</option>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Method</th>
+            <% if user_signed_in? %>
+                <th>Actions</th>
             <% end %>
-            <%= f.submit class: 'btn btn-primary' %>
-        <% end %>
-    <% end %>
+          </tr>
+          </thead>
+          <tbody>
+          <% @order.payments.each do |p| %>
+              <tr>
+                <td><%= p.created_at.strftime('%B %d, %Y') %></td>
+                <td><%= number_to_currency p.amount %></td>
+                <td><%= p.method %></td>
+                <% if user_signed_in? %>
+                    <td><%= link_to 'Delete', order_payment_path(@order, p), method: :delete, 'data-confirm': 'Are you sure you want to delete this payment?' %></td>
+                <% end %>
+              </tr>
+          <% end %>
+          </tbody>
+        </table>
+        <h5>Grand total: <%= number_to_currency @order.total %></h5>
+        <h6>Amount due: <%= number_to_currency @order.total - @order.amount_paid %></h6>
+      </div>
+      <% if user_signed_in? %>
+          <div class="card-footer">
+            <p>Add Payment</p>
+            <%= form_with model: @order.payments.build, url: order_payments_path(@order.id), local: true, html: {class: 'form-inline'} do |f| %>
+                <%= f.label :amount, class: 'sr-only' %>
+
+                <div class="input-group">
+                  <div class="input-group-addon">$</div>
+                  <%= f.number_field :amount, placeholder: 'Amount', step: 0.01, class: 'form-control', id: 'payment_amount', style: 'width: 150px;' %>
+                </div>
+
+                <%= f.label :method, class: 'sr-only' %>
+                <%= f.select :method, {}, {}, {class: 'form-control mr-sm-3 ml-sm-3', id: 'payment_method'} do %>
+                    <option value="" disabled selected>Method</option>
+                    <option value="Venmo">Venmo</option>
+                    <option value="Cash">Cash</option>
+                    <option value="Check">Check</option>
+                <% end %>
+                <%= f.submit class: 'btn btn-primary' %>
+            <% end %>
+          </div>
+      <% end %>
+    </div>
+
   </div>
 </div>
 

@@ -1,3 +1,5 @@
+<%= provide :title, 'HRC Gear Orders' %>q
+
 <% if user_signed_in? %>
 
     <p>Welcome, <%= current_user.email %>. Here are some things you can do:</p>
@@ -6,17 +8,18 @@
       <li><%= link_to 'View Orders', orders_path %></li>
     </ul>
 
-    <% else %>
+<% else %>
     <div class="row">
       <div class="col-md-12">
         <div class="jumbotron">
           <h1 class="display-3">Husky Running Club Gear Orders</h1>
           <hr class="my-4">
           <p class="lead">You can use this website to order gear for Husky Running Club.</p>
+          <%= link_to 'Order Gear', new_order_path, class: 'btn btn-primary' %>
         </div>
       </div>
     </div>
     <%= link_to 'Officer Sign-In', new_user_session_path %>
-    <% end %>
+<% end %>
 
 

@@ -1,6 +1,15 @@
+<% provide :title, 'All Orders' %>
+
 <div class="row">
   <div class="col">
-    <h1>All Orders</h1>
+
+    <% if params[:only_final] %>
+        <h1>Finalized Orders</h1>
+        <%= link_to 'Show All', orders_path %>
+    <% else %>
+        <h1>All Orders</h1>
+        <%= link_to 'Show only finalized', orders_path(only_final: true) %>
+    <% end %>
 
     <table class="table">
       <thead>
@@ -11,21 +20,23 @@
       <th>Total</th>
       <th>Paid</th>
       <th>Due</th>
+      <th>Actions</th>
       </thead>
       <tbody>
       <% @orders.each do |o| %>
-        <tr>
-          <td><%= o.confirmed? ? 'Yes' : 'No' %></td>
-          <td><%= link_to o.full_name, o %></td>
-          <td><%= o.created_at.strftime '%B %d, %Y' %></td>
-          <td><%= o.updated_at.strftime '%B %d, %Y' %></td>
-          <td><%= number_to_currency o.total %></td>
-          <td><%= number_to_currency o.amount_paid %></td>
-          <% due = o.total - o.amount_paid %>
-          <td class="<% if due > 0 %>text-warning<% else %>text-success<% end %>">
-          <%= number_to_currency due %>
-          </td>
-        </tr>
+          <tr>
+            <td><%= o.confirmed? ? 'Yes' : 'No' %></td>
+            <td><%= link_to o.full_name, o %></td>
+            <td><%= o.created_at.strftime '%B %d, %Y' %></td>
+            <td><%= o.updated_at.strftime '%B %d, %Y' %></td>
+            <td><%= number_to_currency o.total %></td>
+            <td><%= number_to_currency o.amount_paid %></td>
+            <% due = o.total - o.amount_paid %>
+            <td class="<% if due > 0 %>text-warning<% else %>text-success<% end %>">
+              <%= number_to_currency due %>
+            </td>
+            <td><%= link_to 'Delete', o, method: :delete, 'data-confirm': 'Are you sure you want to delete this order?' %></td>
+          </tr>
       <% end %>
       </tbody>
     </table>

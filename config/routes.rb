@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   root to: 'static_pages#index'
 
   patch '/orders/:id/finalize', to: 'orders#finalize', as: 'finalize_order'
+  patch '/orders/:id/unfinalize', to: 'orders#unfinalize', as: 'unfinalize_order'
 
   resources :orders do
     resources :purchases

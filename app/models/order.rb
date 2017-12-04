@@ -1,6 +1,6 @@
 class Order < ApplicationRecord
-  has_many :purchases
-  has_many :payments
+  has_many :purchases, dependent: :destroy
+  has_many :payments, dependent: :destroy
   has_many :item_sizes, through: :purchases
 
   before_create :randomize_id
