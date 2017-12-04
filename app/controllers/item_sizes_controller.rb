@@ -1,6 +1,6 @@
 class ItemSizesController < ApplicationController
   before_action :set_item_size, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:show]
 
   # GET /item_sizes
   # GET /item_sizes.json

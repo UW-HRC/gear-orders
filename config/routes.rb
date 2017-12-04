@@ -3,8 +3,7 @@ Rails.application.routes.draw do
 
   root to: 'static_pages#index'
 
-  patch '/orders/:id/finalize', to: 'orders#finalize', as: 'finalize_order'
-  patch '/orders/:id/unfinalize', to: 'orders#unfinalize', as: 'unfinalize_order'
+  patch '/orders/:id/toggle_finalized', to: 'orders#toggle_finalized', as: 'toggle_finalized'
   patch '/orders/:id/toggle_fulfilled', to: 'orders#toggle_fulfilled', as: 'toggle_fulfilled'
 
   resources :orders do

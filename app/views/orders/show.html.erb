@@ -74,13 +74,13 @@
         <%= link_to 'Change my information', edit_order_path(@order) %>
         <br><br>
         <p>
-          <%= link_to 'Finalize order', finalize_order_path(@order), method: :patch, 'data-confirm': 'Once you finalize this order, you will be unable to change it. Are you sure?' %>
+          <%= link_to 'Finalize order', toggle_finalized_path(@order), method: :patch, 'data-confirm': 'Once you finalize this order, you will be unable to change it. Are you sure?' %>
         </p>
     <% end %>
 
     <% if @order.confirmed? && user_signed_in? && !@order.fulfilled? %>
         <p>
-          <%= link_to 'Un-finalize Order', unfinalize_order_path(@order), method: :patch %>
+          <%= link_to 'Un-finalize Order', toggle_finalized_path(@order), method: :patch %>
         </p>
     <% end %>
 

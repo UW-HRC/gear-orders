@@ -87,26 +87,27 @@ class OrdersController < ApplicationController
     end
   end
 
-  def finalize
-    set_order
-    if @order.purchases.count == 0
-      redirect_to @order, alert: 'You cannot finalize an empty order. Please add some items first.'
-      return
-    end
-
-    @order.update_attributes confirmed: true
-    redirect_to @order, notice: 'Finalized successfully.'
-  end
-
-  def unfinalize
+  def toggle_finalized
     set_order
 
-    if @order.fulfilled?
-      redirect_to @order, alert: 'You cannot un-finalize a fulfilled order.'
+    target = params[:all] ? orders_path : @order
+
+    if @order.confirmed?
+      authenticate_user!
+      if @order.fulfilled?
+        redirect_to target, alert: 'You cannot un-finalize a fulfilled order.'
+      else
+        @order.update_attributes confirmed: false
+        redirect_to target, notice: 'Unfinalized successfully.'
+      end
     else
-      @order.update_attributes confirmed: false
-      redirect_to @order, notice: 'Unfinalized successfully.'
+      if @order.purchases.count == 0
+        redirect_to target, alert: 'You cannot finalize an empty order. Please add some items first.'
+        return
+      end
 
+      @order.update_attributes confirmed: true
+      redirect_to target, notice: 'Finalized successfully.'
     end
   end
 
