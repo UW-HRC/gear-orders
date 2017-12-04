@@ -89,6 +89,11 @@ class OrdersController < ApplicationController
 
   def finalize
     set_order
+    if @order.purchases.count == 0
+      redirect_to @order, alert: 'You cannot finalize an empty order. Please add some items first.'
+      return
+    end
+
     @order.update_attributes confirmed: true
     redirect_to @order, notice: 'Finalized successfully.'
   end

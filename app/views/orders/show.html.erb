@@ -28,7 +28,9 @@
             <% end %>
         <% else %>
             <div class="alert alert-info">
-              Add items to your order by clicking the "add new item" link below. You can update your name or email addres anytime by clicking "change my information." Once you're safisfied, click "finalize order."
+                Add items to your order by clicking the "add new item" link below. You can update your name or email addres anytime by clicking "change my information." Once you're safisfied, click "finalize order."
+              <br>
+                If you haven't made up your mind yet, you can return to this page anytime by <%= link_to 'bookmarking it', @order %>.
             </div>
         <% end %>
     <% end %>
@@ -137,6 +139,7 @@
                     <option value="Venmo">Venmo</option>
                     <option value="Cash">Cash</option>
                     <option value="Check">Check</option>
+                    <option value="Refund">Refund</option>
                 <% end %>
                 <%= f.submit class: 'btn btn-primary' %>
             <% end %>
