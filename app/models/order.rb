@@ -8,7 +8,17 @@ class Order < ApplicationRecord
   validates_presence_of :first_name, :last_name, :email
 
   def amount_paid
-    self.payments.reduce(0, :amount)
+    self.payments.reduce(0) { |acc, p| acc + p.amount }
+  end
+
+  def total
+    self.purchases.reduce(0) do |acc, p|
+      acc + (p.item_size.price * p.quantity)
+    end
+  end
+
+  def full_name
+    "#{self.first_name} #{self.last_name}"
   end
 
   private

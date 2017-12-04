@@ -1,0 +1,33 @@
+<div class="row">
+  <div class="col">
+    <h1>All Orders</h1>
+
+    <table class="table">
+      <thead>
+      <th>Finalized</th>
+      <th>Name</th>
+      <th>Created</th>
+      <th>Updated</th>
+      <th>Total</th>
+      <th>Paid</th>
+      <th>Due</th>
+      </thead>
+      <tbody>
+      <% @orders.each do |o| %>
+        <tr>
+          <td><%= o.confirmed? ? 'Yes' : 'No' %></td>
+          <td><%= link_to o.full_name, o %></td>
+          <td><%= o.created_at.strftime '%B %d, %Y' %></td>
+          <td><%= o.updated_at.strftime '%B %d, %Y' %></td>
+          <td><%= number_to_currency o.total %></td>
+          <td><%= number_to_currency o.amount_paid %></td>
+          <% due = o.total - o.amount_paid %>
+          <td class="<% if due > 0 %>text-warning<% else %>text-success<% end %>">
+          <%= number_to_currency due %>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

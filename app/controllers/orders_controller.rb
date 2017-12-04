@@ -1,5 +1,6 @@
 class OrdersController < ApplicationController
   before_action :set_order, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!, only: [:index]
 
   # GET /orders
   # GET /orders.json
@@ -41,7 +42,7 @@ class OrdersController < ApplicationController
   # PATCH/PUT /orders/1.json
   def update
     respond_to do |format|
-      if @order.confirmed?
+      if @order.confirmed? && !user_signed_in?
         format.html { redirect_to @order, notice: 'You cannot make changes to an order once it\'s finalized. Please let us know if you need to make a change.' }
         format.json { render :show, status: 400, location: @order }
         return

@@ -3,19 +3,22 @@
 <div class="row">
   <div class="col-md-12">
     <h1>Order for <%= @order.first_name %> <%= @order.last_name %></h1>
-    <% if @order.confirmed? %>
-        <div class="alert alert-success">
-          Your order has been finalized! Please bring payment via check, or by sending the grand total amount to <b>@huskyrunningclub</b> on Venmo.
-          <br>
-          Once you make a payment, the amount should be updated here within a day or so. You can check the status of this order by visiting this link.
-          <br>
-          We will let you know once gear orders come in!
-        </div>
+    <% if user_signed_in? %>
+    <% else %>
+        <% if @order.confirmed? %>
+            <div class="alert alert-success">
+              Your order has been finalized! Please bring payment via check, or by sending the grand total amount to <b>@huskyrunningclub</b> on Venmo.
+              <br>
+              Once you make a payment, the amount should be updated here within a day or so. You can check the status of this order by visiting this link.
+              <br>
+              We will let you know once gear orders come in!
+            </div>
         <% else %>
-        <div class="alert alert-info">
-          Add items to your order by clicking the "add new item" link below. You can update your name or email addres anytime by clicking "change my information." Once you're safisfied, click "finalize order."
-        </div>
+            <div class="alert alert-info">
+              Add items to your order by clicking the "add new item" link below. You can update your name or email addres anytime by clicking "change my information." Once you're safisfied, click "finalize order."
+            </div>
         <% end %>
+    <% end %>
     <table class="table">
       <thead>
       <tr>
@@ -25,8 +28,8 @@
         <th>Size</th>
         <th>Total Price</th>
         <% unless @order.confirmed? %>
-        <th>Actions</th>
-            <% end %>
+            <th>Actions</th>
+        <% end %>
       </tr>
       </thead>
       <tbody>
@@ -38,22 +41,21 @@
             <td><%= p.item_size.name %></td>
             <td><%= number_to_currency(p.item_size.price * p.quantity) %></td>
             <% unless @order.confirmed? %>
-            <td>
-              <%= link_to 'Remove', order_purchase_path(p.order, p), method: :delete, 'data-confirm': 'Are you sure?' %>
-            </td>
+                <td>
+                  <%= link_to 'Remove', order_purchase_path(p.order, p), method: :delete, 'data-confirm': 'Are you sure?' %>
+                </td>
             <% end %>
           </tr>
       <% end %>
       </tbody>
     </table>
 
-    <% total =  @order.purchases.reduce(0) {|acc, p| acc + (p.item_size.price * p.quantity)} %>
   </div>
 </div>
 <div class="row">
   <div class="col">
-    <h4>Grand total: <%= number_to_currency total %></h4>
-    <h5>Amount due: <%= number_to_currency total - @order.amount_paid %></h5>
+    <h4>Grand total: <%= number_to_currency @order.total %></h4>
+    <h5>Amount due: <%= number_to_currency @order.total - @order.amount_paid %></h5>
 
     <% unless @order.confirmed? %>
         <%= link_to 'Add new item', new_order_purchase_path(@order) %> <br>
@@ -62,6 +64,10 @@
         <p>
           <%= link_to 'Finalize order', finalize_order_path(@order), method: :patch, class: 'text-right', 'data-confirm': 'Once you finalize this order, you will be unable to change it. Are you sure?' %>
         </p>
+    <% end %>
+
+    <% if user_signed_in? %>
+        <%= link_to 'Back', orders_path %>
     <% end %>
   </div>
   <div class="col">
@@ -72,18 +78,40 @@
         <th>Date</th>
         <th>Amount</th>
         <th>Method</th>
+        <th>Actions</th>
       </tr>
       </thead>
+      <tbody>
+      <% @order.payments.each do |p| %>
+          <tr>
+            <td><%= p.created_at.strftime('%B %d, %Y') %></td>
+            <td><%= number_to_currency p.amount %></td>
+            <td><%= p.method %></td>
+            <td><%= link_to 'Delete', order_payment_path(@order, p), method: :delete, 'data-confirm': 'Are you sure you want to delete this payment?' %></td>
+          </tr>
+      <% end %>
+      </tbody>
     </table>
-    <tbody>
-    <% @order.payments.each do |p| %>
-    <tr>
-      <td><%= p.created_at.strftime('%B %d, %Y') %></td>
-      <td><%= number_to_currency p.amount %></td>
-      <td><%= p.method %></td>
-    </tr>
+    <% if user_signed_in? %>
+        <p>Add Payment</p>
+        <%= form_with model: @order.payments.build, url: order_payments_path(@order.id), local: true, html: {class: 'form-inline'} do |f| %>
+            <%= f.label :amount, class: 'sr-only' %>
+
+            <div class="input-group">
+              <div class="input-group-addon">$</div>
+              <%= f.number_field :amount, placeholder: 'Amount', step: 0.01, class: 'form-control', id: 'payment_amount' %>
+            </div>
+
+            <%= f.label :method, class: 'sr-only' %>
+            <%= f.select :method, {}, {}, {class: 'form-control mr-sm-3 ml-sm-3', id: 'payment_method'} do %>
+                <option value="" disabled selected>Method</option>
+                <option value="Venmo">Venmo</option>
+                <option value="Cash">Cash</option>
+                <option value="Check">Check</option>
+            <% end %>
+            <%= f.submit class: 'btn btn-primary' %>
+        <% end %>
     <% end %>
-    </tbody>
   </div>
 </div>
 

@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
   resources :orders do
     resources :purchases
+    resources :payments, only: [:create, :destroy]
   end
 
   resources :items do
