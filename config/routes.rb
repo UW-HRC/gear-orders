@@ -11,6 +11,9 @@ Rails.application.routes.draw do
     resources :payments, only: [:create, :destroy]
   end
 
+  # for JSON parsing
+  get '/item_sizes/:id', to: 'item_sizes#show'
+
   resources :items do
     resources :item_sizes, except: [:destroy]
   end
