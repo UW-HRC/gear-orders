@@ -5,7 +5,7 @@ class OrdersController < ApplicationController
   # GET /orders
   # GET /orders.json
   def index
-    @orders = params[:only_final] ? Order.where(confirmed: true) : Order.all
+    @orders = params[:only_final] ? Order.order(:created_at).where(confirmed: true) : Order.order(:created_at).all
   end
 
   # GET /orders/1
