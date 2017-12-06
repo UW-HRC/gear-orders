@@ -1,42 +1,42 @@
 <%= form_with(model: purchase, url: purchase.new_record? ? order_purchases_path : order_path, local: true) do |form| %>
-  <% if purchase.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(purchase.errors.count, "error") %> prohibited this purchase from being saved:</h2>
+    <% if purchase.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(purchase.errors.count, "error") %> prohibited this purchase from being saved:</h2>
 
-      <ul>
-      <% purchase.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <p>Select the item, size, and quantity you'd like to add:</p>
-
-  <div class="row">
-    <div class="col">
-      <div class="form-group">
-        <%= form.label :quantity %>
-        <%= form.number_field :quantity, id: 'purchase_quantity', class: 'form-control', placeholder: 'Quantity' %>
-      </div>
-      <div class="form-group">
-        <%= form.submit purchase.new_record? ? 'Add Item' : 'Update Item', class: 'btn btn-primary' %>
-        <br>
-        <%= link_to 'Back', @order %>
-      </div>
-    </div>
-    <div class="col">
-      <div class="form-group">
-        <%= form.label :item_size_id, 'Item and Size' %>
-        <%= form.select :item_size_id, option_groups_from_collection_for_select(@items, :item_sizes, :name, :id, lambda {|p| "#{p.name} (#{p.quantity_available} available at #{number_to_currency p.price})" }, params.dig(:purchase, :item_size_id)), {include_blank: true}, {class: 'form-control', id: 'purchase_item_size_id'} %>
-      </div>
-      <div class="card">
-        <div class="card-body">
-          <h6 class="card-title">Item Description</h6>
-          <div id="item_description"></div>
+          <ul>
+            <% purchase.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+            <% end %>
+          </ul>
         </div>
-      </div>
-    </div>
-  </div>
+    <% end %>
+
+      <div class="card-deck">
+
+        <% i = 0 %>
+
+        <% Item.all.each do |item| %>
+
+            <div class="card">
+              <%= image_tag item.photo.url, class: 'card-img-top' %>
+              <div class="card-body">
+                <h4 class="card-title"><%= item.name %></h4>
+                <p class="card-text"><%= item.description %></p>
+              </div>
+              <div class="card-footer">
+                <% item.sizes.each do |size| %>
+                  <%= link_to size.size, orders_create_purchase_path(@order.id, item.id, size.id) %>
+                <% end %>
+              </div>
+            </div>
+
+            <% if i % 3 == 0 && i != 0 %>
+                </div>
+                <div class="card-group">
+            <% end %>
+            <% i += 1 %>
+        <% end %>
+
+        </div>
 
 <% end %>

@@ -93,6 +93,6 @@ class PurchasesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def purchase_params
-      params.fetch(:purchase, {}).permit(:quantity, :item_size_id)
+      params.fetch(:purchase, {}).permit(:quantity, :size_id)
     end
 end

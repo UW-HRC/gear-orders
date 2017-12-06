@@ -18,6 +18,9 @@ Rails.application.routes.draw do
     resources :item_sizes, except: [:destroy]
   end
 
+  get '/orders/:id/new_purchase', to: 'orders#new_purchase', as: 'orders_new_purchase'
+  post '/orders/:id/new_purchase/:item_id/:size_id', to: 'orders#create_purchase', as: 'orders_create_purchase'
+
   devise_for :users, :skip => [:registrations]
 
   as :user do

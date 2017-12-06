@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171204093407) do
+ActiveRecord::Schema.define(version: 20171206034253) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,21 +22,22 @@ ActiveRecord::Schema.define(version: 20171204093407) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "item_sizes", force: :cascade do |t|
-    t.string "name"
-    t.decimal "price", precision: 10, scale: 2
-    t.integer "quantity"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "item_id"
-    t.index ["item_id"], name: "index_item_sizes_on_item_id"
-  end
-
   create_table "items", force: :cascade do |t|
     t.string "name"
     t.text "description"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "photo"
+    t.decimal "price", precision: 10, scale: 2
+  end
+
+  create_table "items_sizes", force: :cascade do |t|
+    t.bigint "item_id"
+    t.bigint "size_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["item_id"], name: "index_items_sizes_on_item_id"
+    t.index ["size_id"], name: "index_items_sizes_on_size_id"
   end
 
   create_table "orders", force: :cascade do |t|
@@ -62,10 +63,18 @@ ActiveRecord::Schema.define(version: 20171204093407) do
     t.integer "quantity"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "item_size_id"
     t.bigint "order_id"
-    t.index ["item_size_id"], name: "index_purchases_on_item_size_id"
+    t.bigint "item_id"
+    t.bigint "size_id"
+    t.index ["item_id"], name: "index_purchases_on_item_id"
     t.index ["order_id"], name: "index_purchases_on_order_id"
+    t.index ["size_id"], name: "index_purchases_on_size_id"
+  end
+
+  create_table "sizes", force: :cascade do |t|
+    t.string "size"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -85,5 +94,9 @@ ActiveRecord::Schema.define(version: 20171204093407) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "items_sizes", "items"
+  add_foreign_key "items_sizes", "sizes"
   add_foreign_key "payments", "orders"
+  add_foreign_key "purchases", "items"
+  add_foreign_key "purchases", "sizes"
 end

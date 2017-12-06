@@ -55,3 +55,6 @@ gem 'bootstrap', '~> 4.0.0.beta2.1'
 gem 'sprockets-rails'
 gem 'jquery-rails'
 gem 'devise'
+
+# for file uploads
+gem 'carrierwave', '~> 1.0'

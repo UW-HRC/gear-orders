@@ -39,7 +39,7 @@
     <table class="table">
       <thead>
       <tr>
-        <th style="width: 100px;">Quantity</th>
+        <!--<th style="width: 100px;">Quantity</th>-->
         <th style="width: 100px;">Price</th>
         <th>Item</th>
         <th>Size</th>
@@ -52,11 +52,11 @@
       <tbody>
       <% @order.purchases.each do |p| %>
           <tr>
-            <td><%= p.quantity %></td>
-            <td><%= number_to_currency p.item_size.price %></td>
-            <td><%= p.item_size.item.name %></td>
-            <td><%= p.item_size.name %></td>
-            <td><%= number_to_currency(p.item_size.price * p.quantity) %></td>
+            <!--<td><%= p.quantity %></td>-->
+            <td><%= number_to_currency p.item.price %></td>
+            <td><%= p.item.name %></td>
+            <td><%= p.size.size %></td>
+            <td><%= number_to_currency(p.item.price * p.quantity) %></td>
             <% unless @order.confirmed? %>
                 <td>
                   <%= link_to 'Remove', order_purchase_path(p.order, p), method: :delete, 'data-confirm': 'Are you sure?' %>
@@ -82,7 +82,7 @@
       <div class="card-header">Order Actions</div>
         <div class="list-group list-group-flush">
           <% unless @order.confirmed? %>
-              <%= link_to 'Add Item To Order', new_order_purchase_path(@order), class: 'list-group-item list-group-item-action list-group-item-primary' %>
+              <%= link_to 'Add Item To Order', orders_new_purchase_path(@order), class: 'list-group-item list-group-item-action list-group-item-primary' %>
               <%= link_to 'Change Name and Email', edit_order_path(@order), class: 'list-group-item list-group-item-action list-group-item-dark' %>
               <%= link_to 'Finalize Order', toggle_finalized_path(@order), method: :patch, 'data-confirm': 'Once you finalize this order, you will be unable to change it. Are you sure?', class: 'list-group-item list-group-item-action list-group-item-success' %>
           <% end %>

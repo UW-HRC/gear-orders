@@ -13,7 +13,7 @@ class Order < ApplicationRecord
 
   def total
     self.purchases.reduce(0) do |acc, p|
-      acc + (p.item_size.price * p.quantity)
+      acc + (p.item.price * p.quantity)
     end
   end
 

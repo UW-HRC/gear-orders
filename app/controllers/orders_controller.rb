@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-  before_action :set_order, only: [:show, :edit, :update, :destroy]
+  before_action :set_order, only: [:show, :edit, :update, :destroy, :new_purchase, :create_purchase]
   before_action :authenticate_user!, only: [:index, :unfinalize, :destroy, :toggle_fulfilled]
 
   # GET /orders
@@ -109,6 +109,15 @@ class OrdersController < ApplicationController
       @order.update_attributes confirmed: true
       redirect_to target, notice: 'Finalized successfully.'
     end
+  end
+
+  def new_purchase
+  end
+
+  def create_purchase
+    set_order
+    @order.purchases.create! item_id: params[:item_id], size_id: params[:size_id], quantity: 1
+    redirect_to @order, notice: 'Item was successfully added.'
   end
 
   private
