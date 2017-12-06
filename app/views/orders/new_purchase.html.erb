@@ -3,18 +3,20 @@
 <div class="card-columns">
 
   <% Item.all.each do |item| %>
-        <div class="card">
-          <%= image_tag item.photo.url, class: 'card-img-top' %>
-          <div class="card-body">
-            <h4 class="card-title"><%= item.name %></h4>
-            <p class="card-text"><%= item.description %></p>
-          </div>
-          <div class="card-footer">
-            <h6>Add Size To Order</h6>
-            <% item.sizes.each do |size| %>
-                <%= link_to size.size, orders_create_purchase_path(@order.id, item.id, size.id), method: :post, class: 'btn btn-primary' %>
-            <% end %>
-          </div>
+      <div class="card">
+        <% unless item.photo.file.nil? %>
+            <%= image_tag item.photo.url, class: 'card-img-top' %>
+        <% end %>
+        <div class="card-body">
+          <h4 class="card-title"><%= item.name %></h4>
+          <p class="card-text"><%= item.description %></p>
         </div>
+        <div class="card-footer">
+          <h6>Add Size To Order</h6>
+          <% item.sizes.each do |size| %>
+              <%= link_to size.size, orders_create_purchase_path(@order.id, item.id, size.id), method: :post, class: 'btn btn-primary' %>
+          <% end %>
+        </div>
+      </div>
   <% end %>
-  </div>
+</div>

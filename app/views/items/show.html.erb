@@ -16,8 +16,9 @@
     <h6>Price: <%= number_to_currency @item.price %></h6>
   </div>
 </div>
-
+<% unless @item.photo.file.nil? %>
 <%= image_tag @item.photo.url, style: 'max-width: 300px;' %>
+<% end %>
 <br><br>
 <%= link_to 'Edit', edit_item_path(@item) %> |
 <%= link_to 'Back', items_path %>
