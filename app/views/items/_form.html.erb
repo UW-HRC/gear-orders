@@ -29,12 +29,12 @@
       </div>
     </div>
 
-    <%= form.label 'Sizes Available' %>
+    <%= form.label 'Sizes Available (you cannot change availability on sizes if they have been purchased)' %>
 
     <%= form.collection_check_boxes :size_ids, Size.all, :id, :size do |s| %>
         <div class="form-check">
           <label class="form-check-label">
-            <%= s.check_box class: 'form-check-input' %>
+            <%= s.check_box class: 'form-check-input', disabled: (s.object.purchases.where(item: item).count != 0) %>
             <%= s.object.size %>
           </label>
         </div>
