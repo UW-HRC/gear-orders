@@ -1,10 +1,18 @@
 
 <h1>Items</h1>
 
-<table class="table">
+<table class="table table-bordered">
   <thead>
     <tr>
+      <th></th>
+      <th colspan="<%= Size.count%>">Sales</th>
+      <th colspan="3"></th>
+    </tr>
+    <tr>
       <th>Name</th>
+      <% Size.order('id').each do |s| %>
+          <th><%= s.size %></th>
+          <% end %>
       <th colspan="3">Actions</th>
     </tr>
   </thead>
@@ -13,6 +21,13 @@
     <% @items.each do |item| %>
       <tr>
         <td><%= item.name %></td>
+        <% Size.order('id').each do |s| %>
+          <% if item.sizes.exists? s.id %>
+            <td><%= s.purchases.where(item: item).count %></td>
+            <% else %>
+            <td>&mdash;</td>
+          <% end %>
+        <% end %>
         <td><%= link_to 'Show', item %></td>
         <td><%= link_to 'Edit', edit_item_path(item) %></td>
         <td><%= link_to 'Destroy', item, method: :delete, data: { confirm: 'Are you sure? Deleting this item will delete it from all orders!' } %></td>

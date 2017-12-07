@@ -2,7 +2,7 @@
 
 <div class="card-columns">
 
-  <% Item.all.each do |item| %>
+  <% Item.order('name').each do |item| %>
       <div class="card">
         <% unless item.photo.file.nil? %>
             <%= image_tag item.photo.url, class: 'card-img-top' %>

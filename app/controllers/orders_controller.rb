@@ -116,7 +116,7 @@ class OrdersController < ApplicationController
 
   def create_purchase
     set_order
-    @order.purchases.create! item_id: params[:item_id], size_id: params[:size_id], quantity: 1
+    @order.purchases.create! item_id: params[:item_id], size_id: params[:size_id]
     redirect_to @order, notice: 'Item was successfully added.'
   end
 

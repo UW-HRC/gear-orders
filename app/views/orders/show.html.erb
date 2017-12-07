@@ -39,7 +39,6 @@
     <table class="table">
       <thead>
       <tr>
-        <!--<th style="width: 100px;">Quantity</th>-->
         <th style="width: 100px;">Price</th>
         <th>Item</th>
         <th>Size</th>
@@ -52,11 +51,10 @@
       <tbody>
       <% @order.purchases.each do |p| %>
           <tr>
-            <!--<td><%= p.quantity %></td>-->
             <td><%= number_to_currency p.item.price %></td>
             <td><%= p.item.name %></td>
             <td><%= p.size.size %></td>
-            <td><%= number_to_currency(p.item.price * p.quantity) %></td>
+            <td><%= number_to_currency(p.item.price) %></td>
             <% unless @order.confirmed? %>
                 <td>
                   <%= link_to 'Remove', order_purchase_path(p.order, p), method: :delete, 'data-confirm': 'Are you sure?' %>
