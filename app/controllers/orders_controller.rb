@@ -1,7 +1,7 @@
 class OrdersController < ApplicationController
   before_action :set_order, only: [:show, :edit, :update, :destroy, :new_purchase, :create_purchase]
   before_action :authenticate_user!, only: [:index, :unfinalize, :destroy, :toggle_fulfilled]
-  before_action :verify_open, only: [:new, :create, :edit, :update]
+  before_action :verify_open, only: [:new, :create, :edit, :update, :new_purchase, :create_purchase]
 
   # GET /orders
   # GET /orders.json
