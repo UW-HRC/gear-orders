@@ -26,8 +26,8 @@
       <tbody>
       <% @orders.each do |o| %>
           <tr>
-            <td><%= link_to o.confirmed? ? '<span class=\'text-success\'>Yes'.html_safe : '<span class=\'text-warning\'>No</span>'.html_safe, toggle_finalized_path(o, all: true), method: :patch %></td>
-            <td><%= link_to o.fulfilled? ? '<span class=\'text-success\'>Yes'.html_safe : '<span class=\'text-warning\'>No</span>'.html_safe, toggle_fulfilled_path(o), method: :patch %></td>
+            <td><%= link_to o.confirmed? ? '<span class=\'text-success\'>Yes'.html_safe : '<span class=\'text-warning\'>No</span>'.html_safe, toggle_finalized_path(o, all: true), method: :patch, 'data-confirm': 'Are you sure?' %></td>
+            <td><%= link_to o.fulfilled? ? '<span class=\'text-success\'>Yes'.html_safe : '<span class=\'text-warning\'>No</span>'.html_safe, toggle_fulfilled_path(o), method: :patch, 'data-confirm': 'Are you sure?' %></td>
             <td><%= link_to o.full_name, o %></td>
             <td><%= o.created_at.strftime '%B %d, %Y' %></td>
             <td><%= o.updated_at.strftime '%B %d, %Y' %></td>

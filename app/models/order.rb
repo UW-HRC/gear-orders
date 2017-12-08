@@ -4,7 +4,9 @@ class Order < ApplicationRecord
 
   before_create :randomize_id
 
-  validates_presence_of :first_name, :last_name, :email
+  validates_presence_of :first_name, :last_name
+
+  validates :email, presence: true, uniqueness: {message: 'is already associated with an order. Please check your email for the link to access it, or contact Husky Running Club if you can\'t find it.'}
 
   def amount_paid
     self.payments.reduce(0) { |acc, p| acc + p.amount }
