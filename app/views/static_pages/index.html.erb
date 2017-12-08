@@ -15,7 +15,11 @@
         <div class="jumbotron">
           <h1 class="display-3">Husky Running Club Gear Orders</h1>
           <hr class="my-4">
-          <p class="lead">You can use this website to order gear for Husky Running Club!</p>
+          <p class="lead">
+            You can use this website to order gear for Husky Running Club!
+            <br>
+            <span class="text-info"><%= ENV['FRONT_PAGE'] || '' %></span>
+          </p>
           <%= link_to 'Order Gear', new_order_path, class: 'btn btn-primary' %>
           <br><br>
           <p>This logo will be printed on all the gear (minus the purple background on black clothing):</p>
