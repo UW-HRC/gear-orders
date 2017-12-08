@@ -31,7 +31,7 @@
             <td><%= link_to o.full_name, o %></td>
             <td><%= o.created_at.strftime '%B %d, %Y' %></td>
             <td><%= o.updated_at.strftime '%B %d, %Y' %></td>
-            <td><%= number_to_currency o.total %></td>
+            <td class="<% if o.total > 0 %>text-info<% else %>text-muted<% end %>"><%= number_to_currency o.total %></td>
             <td><%= number_to_currency o.amount_paid %></td>
             <% due = o.total - o.amount_paid %>
             <td class="<% if due > 0 %>text-warning<% else %>text-success<% end %>">
