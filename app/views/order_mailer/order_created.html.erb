@@ -1,0 +1,17 @@
+<p>
+  Hi there, <%= "#{@order.first_name} #{@order.last_name}" %>.
+</p>
+
+<p>
+  You've successfully created a gear order for Husky Running Club. You may check the status of your order at any time, or edit your items, by following the link below:
+</p>
+
+<%= link_to order_url(@order), order_url(@order) %>
+
+<p>
+  Be sure you click "Finalize" once you're done adding items.
+</p>
+
+<p>
+  Have a great day!
+</p>
