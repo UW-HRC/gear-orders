@@ -5,11 +5,14 @@
 
     <% if params[:only_final] %>
         <h1>Finalized Orders</h1>
-        <%= link_to 'Show All', orders_path %>
+        <%= link_to 'Show All (' + Order.all.count.to_s + ')', orders_path %>
     <% else %>
         <h1>All Orders</h1>
-        <%= link_to 'Show only finalized', orders_path(only_final: true) %>
+        <%= link_to 'Show only finalized (' + Order.where(confirmed: true).count.to_s + ')', orders_path(only_final: true) %>
     <% end %>
+    <p>
+      Total Revenue (from displayed orders): <b><%= number_to_currency @orders.all.reduce(0) { |acc, o| acc + o.total } %></b><br>
+    </p>
 
     <table class="table">
       <thead>
