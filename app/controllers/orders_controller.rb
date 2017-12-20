@@ -123,6 +123,14 @@ class OrdersController < ApplicationController
     redirect_to @order, notice: 'Item was successfully added.'
   end
 
+  def unfinished_order_mail
+    @orders = Order.where confirmed: false
+
+    @orders.each do |o|
+      OrderMailer.unfinished_order(o).deliver_later
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_order

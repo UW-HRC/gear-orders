@@ -3,8 +3,13 @@ Rails.application.routes.draw do
 
   root to: 'static_pages#index'
 
+  patch '/orders/unfinished_order_mail', to: 'orders#unfinished_order_mail', as: 'unfinished_order_mail'
+
   patch '/orders/:id/toggle_finalized', to: 'orders#toggle_finalized', as: 'toggle_finalized'
   patch '/orders/:id/toggle_fulfilled', to: 'orders#toggle_fulfilled', as: 'toggle_fulfilled'
+
+  get '/orders/:id/new_purchase', to: 'orders#new_purchase', as: 'orders_new_purchase'
+  post '/orders/:id/new_purchase/:item_id/:size_id', to: 'orders#create_purchase', as: 'orders_create_purchase'
 
   resources :orders do
     resources :purchases
@@ -18,8 +23,6 @@ Rails.application.routes.draw do
     resources :item_sizes, except: [:destroy]
   end
 
-  get '/orders/:id/new_purchase', to: 'orders#new_purchase', as: 'orders_new_purchase'
-  post '/orders/:id/new_purchase/:item_id/:size_id', to: 'orders#create_purchase', as: 'orders_create_purchase'
 
   devise_for :users, :skip => [:registrations]
 

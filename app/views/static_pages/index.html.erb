@@ -9,6 +9,21 @@
       <li><%= link_to 'Update Your Password', edit_user_registration_path %></li>
     </ul>
 
+    <div class="row">
+      <div class="col">
+        <div class="card">
+          <div class="card-header">
+            Send Unfinished Order Email
+          </div>
+          <div class="card-body">
+            <p class="card-text">Send an email to everyone who has created an order, but has not yet finalized it.</p>
+            <%= link_to 'Send Mail', unfinished_order_mail_path, class: 'btn btn-primary', 'data-confirm': 'About to send email. Are you sure?', method: :patch %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
 <% else %>
     <div class="row">
       <div class="col-md-12">

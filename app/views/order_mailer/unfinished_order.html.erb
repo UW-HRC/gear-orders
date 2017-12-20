@@ -1,0 +1,22 @@
+<p>
+  Hi there, <%= "#{@order.first_name} #{@order.last_name}" %>.
+</p>
+
+<p>
+  You're receiving this email because you created a gear order with Husky Running Club, but never completed it. To finish your order, click the link below:
+</p>
+
+<%= link_to order_url(@order), order_url(@order) %>
+
+<p>
+  Be sure to click "Finalize Order" once you're done.
+</p>
+
+<p>
+  If you would like to cancel your order, please respond to this email letting us know.
+</p>
+
+<p>
+  Happy holidays!<br>
+  - Husky Running Club
+</p>
