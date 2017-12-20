@@ -129,6 +129,8 @@ class OrdersController < ApplicationController
     @orders.each do |o|
       OrderMailer.unfinished_order(o).deliver_later
     end
+
+    redirect_to root_path, alert: "Sent #{@orders.count} #{'email'.pluralize @orders.count}."
   end
 
   private
