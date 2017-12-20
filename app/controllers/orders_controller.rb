@@ -130,7 +130,7 @@ class OrdersController < ApplicationController
       OrderMailer.unfinished_order(o).deliver_later
     end
 
-    redirect_to root_path, alert: "Sent #{@orders.count} #{'email'.pluralize @orders.count}."
+    redirect_to root_path, notice: "Successfully sent #{@orders.count} #{'email'.pluralize @orders.count}."
   end
 
   private
