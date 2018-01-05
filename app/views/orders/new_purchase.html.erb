@@ -8,7 +8,11 @@
             <%= image_tag item.photo.url, class: 'card-img-top' %>
         <% end %>
         <div class="card-body">
-          <h4 class="card-title"><%= item.name %></h4>
+          <h4 class="card-title">
+            <%= item.name %>
+            <br>
+            <strong><small><%= number_to_currency item.price %></small></strong>
+          </h4>
           <p class="card-text"><%= item.description %></p>
         </div>
         <div class="card-footer">
