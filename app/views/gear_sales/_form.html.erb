@@ -16,6 +16,11 @@
     <small class="form-text text-muted">For example, "Autumn 2019."</small>
   </div>
   <div class="form-group">
+    <label for="gear_sale_status">Status</label>
+    <%= f.text_field :status, class: 'form-control', placeholder: 'Status' %>
+    <small class="form-text text-muted">If you enter a status, it will be displayed on the front page of the website.</small>
+  </div>
+  <div class="form-group">
     <%= f.submit class: 'btn btn-primary' %>
   </div>
 <% end %>

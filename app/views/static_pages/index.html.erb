@@ -2,18 +2,24 @@
 
 <div class="row">
   <div class="col-md-12">
+
+    <% if GearSale.active_sale && GearSale.active_sale.status.present? %>
+      <div class="alert alert-info">
+        <%= GearSale.active_sale.status %>
+      </div>
+    <% end %>
+
     <div class="jumbotron">
       <h1 class="display-3">Husky Running Club Gear Orders</h1>
       <hr class="my-4">
       <p class="lead">
         You can use this website to order gear for Husky Running Club!
-        <br>
-        <span class="text-info"><%= ENV['FRONT_PAGE'] || '' %></span>
+        <% if GearSale.active_sale && GearSale.active_sale.open? %>
+          <br>
+          <%= link_to 'Order Gear', new_order_path, class: 'btn btn-primary mt-3' %>
+        <% else %>
+        <% end %>
       </p>
-      <%= link_to 'Order Gear', new_order_path, class: 'btn btn-primary' %>
-      <br><br>
-      <p>This logo will be printed on all the gear (minus the purple background on black clothing):</p>
-      <%= image_tag image_path('hrc_purple_dog.jpg'), style: 'widtH: 200px; border-radius: 6px;' %>
     </div>
   </div>
 </div>

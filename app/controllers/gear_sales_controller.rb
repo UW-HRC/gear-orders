@@ -45,7 +45,7 @@ class GearSalesController < ApplicationController
 
   private
   def gear_sale_params
-    params.require(:gear_sale).permit(:name, :active)
+    params.require(:gear_sale).permit(:name, :active, :status)
   end
 
   def set_gear_sale
