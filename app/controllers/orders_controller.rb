@@ -6,7 +6,8 @@ class OrdersController < ApplicationController
   # GET /orders
   # GET /orders.json
   def index
-    @orders = params[:only_final] ? Order.order(:created_at).where(confirmed: true, gear_sale: GearSale.active_sale) : Order.order(:created_at).all
+    @orders = params[:only_final] ? Order.order(:created_at).where(confirmed: true, gear_sale: GearSale.active_sale) :
+                  Order.order(:created_at).where(gear_sale: GearSale.active_sale)
   end
 
   # GET /orders/1
@@ -113,6 +114,11 @@ class OrdersController < ApplicationController
     set_order
 
     target = params[:all] ? orders_path : @order
+
+    unless user_signed_in?
+      verify_open
+      return
+    end
 
     if @order.confirmed?
       authenticate_user!
