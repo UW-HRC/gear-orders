@@ -8,13 +8,14 @@
         <%= link_to 'Show All (' + Order.all.count.to_s + ')', orders_path %>
     <% else %>
         <h1>All Orders</h1>
+
         <%= link_to 'Show only finalized (' + Order.where(confirmed: true).count.to_s + ')', orders_path(only_final: true) %>
     <% end %>
     <p>
       Total Revenue (from displayed orders): <b><%= number_to_currency @orders.all.reduce(0) { |acc, o| acc + o.total } %></b><br>
     </p>
 
-    <table class="table">
+    <table class="table table-sm table-bordered">
       <thead>
       <th>Finalized</th>
       <th>Fulfilled</th>

@@ -5,3 +5,9 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+Size.create! size: "X Small"
+Size.create! size: "Small"
+Size.create! size: "Medium"
+Size.create! size: "Large"
+Size.create! size: "X Large"

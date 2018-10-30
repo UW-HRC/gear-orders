@@ -27,12 +27,14 @@
         <ul class="list-group list-group-flush">
           <li class="list-group-item"><%= link_to 'View Sales and Edit Items for Sale', items_path %></li>
           <li class="list-group-item"><%= link_to 'View Orders', orders_path %></li>
+          <% if @active_sale.open? %>
           <li class="list-group-item">
             <%= link_to 'Send Unfinished Order Reminder', unfinished_order_mail_path, 'data-confirm': 'About to send email. Are you sure?', method: :patch %>
             <p class="mb-1">
               <small>Send an email to everyone who has created an order, but has not yet finalized it.</small>
             </p>
           </li>
+            <% end %>
           <li class="list-group-item">
             <%= link_to "#{@active_sale.open? ? "Close" : "Open"} This Sale", toggle_sale_open_path(@active_sale.id), method: :patch %>
             <p class="mb-1">

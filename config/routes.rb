@@ -12,8 +12,8 @@ Rails.application.routes.draw do
   post '/orders/:id/new_purchase/:item_id/:size_id', to: 'orders#create_purchase', as: 'orders_create_purchase'
 
   resources :orders do
-    resources :purchases
     resources :payments, only: [:create, :destroy]
+    resources :purchases, only: [:destroy]
   end
 
   # for JSON parsing

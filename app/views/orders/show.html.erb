@@ -26,11 +26,16 @@
             We will let you know once gear orders arrive!
           </div>
         <% end %>
-      <% else %>
+      <% elsif @order.gear_sale.open? %>
         <div class="alert alert-info">
           Add items to your order by clicking the "Add Item To Order" link below. Once you're done adding items, click "Finalize Order."
           <br>
           If you haven't made up your mind yet, you can return to this page anytime by <%= link_to 'bookmarking it', @order %>.
+        </div>
+      <% else %>
+        <div class="alert alert-warning">
+          Unfortunately, gear orders are now closed for this sale. If you are still interested in ordering gear, please
+          contact us directly as soon as possible, and we may be able to accomodate your order.
         </div>
       <% end %>
     <% end %>
@@ -90,7 +95,9 @@
             <p class="mb-1">
               <%= link_to 'Finalize Order', toggle_finalized_path(@order), method: :patch, 'data-confirm': 'Once you finalize this order, you will be unable to change it. Are you sure?'%>
             </p>
-            <small>You won't be able to make changes to your order once it's finalized.</small>
+            <% unless user_signed_in? %>
+              <small>You won't be able to make changes to your order once it's finalized.</small>
+            <% end %>
           </li>
         <% end %>
 
@@ -100,7 +107,7 @@
 
         <% if @order.confirmed? && !user_signed_in? %>
           <div class="card-body">
-            <em>You're all set! We'll make an announcement when gear orders arrive.</em>
+            <i>You're all set! We'll make an announcement when gear orders arrive. Please make sure you've paid for your order.</i>
           </div>
         <% end %>
       </ul>
@@ -115,7 +122,7 @@
     <div class="card bg-light border-primary">
       <div class="card-body">
         <h4 class="card-title">Payment History</h4>
-        <p>Payments can be made via cash, check, or Venmo <b>@huskyrunningclub</b>.</p>
+        <p>Payments can be made via cash, check, or Venmo to: <b>@huskyrunningclub</b>.</p>
         <table class="table table-sm">
           <thead>
           <tr>

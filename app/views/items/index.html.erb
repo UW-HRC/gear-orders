@@ -1,16 +1,16 @@
 
 <h1>Items</h1>
-
-<table class="table table-bordered">
+<p>
+  Each item for this sale is listed below, along with the price, and quantity sold in each size. "&mdash;" indicates
+  that the item is unavailable in that size.
+</p>
+<table class="table table-sm table-bordered">
   <thead>
     <tr>
-      <th></th>
-      <th colspan="<%= Size.count%>">Sales</th>
-    </tr>
-    <tr>
       <th>Name</th>
+      <th>Price</th>
       <% Size.order('id').each do |s| %>
-          <th><%= s.size %></th>
+          <th><%= s.size %> Sold</th>
           <% end %>
     </tr>
   </thead>
@@ -19,6 +19,7 @@
     <% @items.each do |item| %>
       <tr>
         <td><%= link_to item.name, item %></td>
+        <td><%= number_to_currency item.price %></td>
         <% Size.order('id').each do |s| %>
           <% if item.sizes.exists? s.id %>
             <td><%= s.purchases.where(item: item).count %></td>

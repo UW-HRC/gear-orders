@@ -27,9 +27,13 @@
           <li class="nav-item"><%= link_to 'Sign Out', destroy_user_session_path, class: 'nav-link', method: :delete %></li>
         <% end %>
       </ul>
-      <% if user_signed_in? %>
-          <span class="navbar-text"><%= current_user.email %></span>
-      <% end %>
+      <ul class="navbar-nav">
+        <% if user_signed_in? %>
+          <li class="nav-item"><span class="navbar-text"><%= current_user.email %></span></li>
+        <% else %>
+          <li class="nav-item"><%= link_to 'Officer Sign-In', new_user_session_path, class: 'nav-link' %></li>
+        <% end %>
+      </ul>
     </div>
   </div>
 </nav>

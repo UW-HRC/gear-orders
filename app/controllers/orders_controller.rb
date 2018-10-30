@@ -142,8 +142,15 @@ class OrdersController < ApplicationController
 
   def create_purchase
     set_order
-    @order.purchases.create! item_id: params[:item_id], size_id: params[:size_id]
-    flash[:success] = 'Item was successfully added.'
+
+    item = Item.find(params[:item_id])
+    if @order.gear_sale != item.gear_sale
+      flash[:warning] = "Order and item must belong to the same gear sale."
+    else
+      @order.purchases.create! item_id: params[:item_id], size_id: params[:size_id]
+      flash[:success] = 'Item was successfully added.'
+    end
+
     redirect_to @order
   end
 
