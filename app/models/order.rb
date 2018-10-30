@@ -1,4 +1,6 @@
 class Order < ApplicationRecord
+  belongs_to :gear_sale
+
   has_many :purchases, -> { order(created_at: :asc) }, dependent: :destroy
   has_many :payments, -> { order(created_at: :asc) }, dependent: :destroy
 

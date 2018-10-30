@@ -23,7 +23,8 @@
         <li class="nav-item"><%= link_to 'Order Gear', new_order_path, class: 'nav-link' %></li>
         <!--<li class="nav-item"><a href="#" class="nav-link">Check Order Status</a></li>-->
         <% if user_signed_in? %>
-            <li class="nav-item"><%= link_to 'Sign Out', destroy_user_session_path, class: 'nav-link', method: :delete %></li>
+          <li class="nav-item"><%= link_to 'Admin Panel', admin_index_path, class: 'nav-link' %></li>
+          <li class="nav-item"><%= link_to 'Sign Out', destroy_user_session_path, class: 'nav-link', method: :delete %></li>
         <% end %>
       </ul>
       <% if user_signed_in? %>
@@ -34,15 +35,12 @@
 </nav>
 <br>
 <div class="container">
-  <% if notice %>
-      <div class="alert alert-primary">
-        <%= notice %>
+  <% flash.each do |name, msg| %>
+    <div class="alert alert-<%= name %>">
+      <div class="mb-0">
+        <%= msg.html_safe %>
       </div>
-  <% end %>
-  <% if alert %>
-      <div class="alert alert-danger">
-        <%= alert %>
-      </div>
+    </div>
   <% end %>
   <%= yield %>
 </div>

@@ -15,7 +15,7 @@
 
         <% i = 0 %>
 
-        <% Item.all.each do |item| %>
+        <% Item.where(gear_sale: GearSale.active_sale).each do |item| %>
 
             <div class="card">
               <%= image_tag item.photo.url, class: 'card-img-top' %>

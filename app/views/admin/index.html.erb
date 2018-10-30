@@ -1,0 +1,91 @@
+<h1>Admin Panel</h1>
+<p>
+  Welcome, <%= current_user.email %>.
+  <%= link_to 'Update your profile or password', edit_user_registration_path %>.
+</p>
+
+<div class="row">
+  <div class="col">
+    <div class="card">
+      <% if @active_sale %>
+        <div class="card-body">
+          <h5 class="card-title">
+            Active Gear Sale
+          </h5>
+
+          <p class="card-text">
+            Right now, the active gear sale is <span class="badge badge-pill badge-primary"><%= @active_sale.name %></span>.
+
+            <% if @active_sale.open? %>
+              The gear sale is currently <b>open</b>, so order creation and editing is allowed.
+            <% else %>
+              The gear sale is currently <b>closed</b>, so order creation and editing is forbidden.
+            <% end %>
+          </p>
+        </div>
+
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><%= link_to 'View Sales and Edit Items for Sale', items_path %></li>
+          <li class="list-group-item"><%= link_to 'View Orders', orders_path %></li>
+          <li class="list-group-item">
+            <%= link_to 'Send Unfinished Order Reminder', unfinished_order_mail_path, 'data-confirm': 'About to send email. Are you sure?', method: :patch %>
+            <p class="mb-1">
+              <small>Send an email to everyone who has created an order, but has not yet finalized it.</small>
+            </p>
+          </li>
+          <li class="list-group-item">
+            <%= link_to "#{@active_sale.open? ? "Close" : "Open"} This Sale", toggle_sale_open_path(@active_sale.id), method: :patch %>
+            <p class="mb-1">
+              <% if @active_sale.open %>
+                <small>Freeze creation of new orders, and prevent editing of existing orders.</small>
+              <% else %>
+                <small>Allow order creation and editing.</small>
+              <% end %>
+            </p>
+          </li>
+          <li class="list-group-item">
+            <%= link_to 'Deactivate This Sale', toggle_sale_active_path(@active_sale.id), method: :patch, data: {confirm: "Are you sure you want to deactivate this sale?"} %>
+            <p class="mb-1">
+              <small>Mark this gear sale as inactive. You won't be able to access any information about the sale unless it is reactivated.</small>
+            </p>
+          </li>
+        </ul>
+      <% else %>
+        <div class="card-body">
+          <h5 class="card-title">
+            Active Gear Sale
+          </h5>
+          <p class="card-text">
+            There is no active gear sale. You can reactivate an inactive sale, or <%= link_to 'create a new one', new_gear_sale_path %>.
+          </p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="card" style="color: #858585;">
+      <div class="card-body">
+        <h5 class="card-title">
+          Inactive Gear Sales
+        </h5>
+        <p class="card-text">
+          <% if @active_sale %>
+            To activate one of these sales, you need to first <%= link_to "deactivate <span class='badge badge-pill badge-primary'>#{@active_sale.name}</span>".html_safe, toggle_sale_active_path(@active_sale.id), method: :patch, data: {confirm: "Are you sure you want to deactivate this sale?"} %>.
+          <% else %>
+            Choose a sale to activate, or create a new one.
+          <% end %>
+        </p>
+      </div>
+      <ul class="list-group list-group-flush">
+        <% for sale in @inactive_sales %>
+          <li class="list-group-item">
+            <span class="badge badge-pill badge-secondary"><%= sale.name %></span>
+            <%= link_to 'Edit', edit_gear_sale_path(sale), class: 'btn btn-link btn-sm' %>
+            <% unless @active_sale %><%= link_to 'Activate', toggle_sale_active_path(sale.id), method: :patch, data: {confirm: "Are you sure you want to activate this sale?"}, class: 'btn btn-info btn-sm' %>
+            <% end %></li>
+        <% end %>
+      </ul>
+    </div>
+  </div>
+</div>

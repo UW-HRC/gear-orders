@@ -23,6 +23,12 @@ Rails.application.routes.draw do
     resources :item_sizes, except: [:destroy]
   end
 
+  resources :admin, only: [:index]
+
+  resources :gear_sales, only: [:new, :create, :edit, :update]
+
+  patch '/gear_sales/:id/toggle_active', to: 'gear_sales#toggle_active', as: 'toggle_sale_active'
+  patch '/gear_sales/:id/toggle_open', to: 'gear_sales#toggle_open', as: 'toggle_sale_open'
 
   devise_for :users, :skip => [:registrations]
 

@@ -10,16 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171207074407) do
+ActiveRecord::Schema.define(version: 20181030151518) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "gear_sales", force: :cascade do |t|
     t.string "name"
-    t.date "close_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "active", default: false
+    t.boolean "open", default: false
   end
 
   create_table "items", force: :cascade do |t|
@@ -29,6 +30,8 @@ ActiveRecord::Schema.define(version: 20171207074407) do
     t.datetime "updated_at", null: false
     t.string "photo"
     t.decimal "price", precision: 10, scale: 2
+    t.bigint "gear_sale_id"
+    t.index ["gear_sale_id"], name: "index_items_on_gear_sale_id"
   end
 
   create_table "items_sizes", force: :cascade do |t|
@@ -48,14 +51,16 @@ ActiveRecord::Schema.define(version: 20171207074407) do
     t.string "last_name"
     t.string "email"
     t.boolean "fulfilled", default: false
+    t.bigint "gear_sale_id"
+    t.index ["gear_sale_id"], name: "index_orders_on_gear_sale_id"
   end
 
   create_table "payments", force: :cascade do |t|
     t.bigint "order_id"
     t.decimal "amount", precision: 10, scale: 2
-    t.string "method"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "method"
     t.index ["order_id"], name: "index_payments_on_order_id"
   end
 
@@ -93,8 +98,10 @@ ActiveRecord::Schema.define(version: 20171207074407) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "items", "gear_sales"
   add_foreign_key "items_sizes", "items"
   add_foreign_key "items_sizes", "sizes"
+  add_foreign_key "orders", "gear_sales"
   add_foreign_key "payments", "orders"
   add_foreign_key "purchases", "items"
   add_foreign_key "purchases", "sizes"

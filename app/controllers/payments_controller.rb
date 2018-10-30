@@ -8,9 +8,15 @@ class PaymentsController < ApplicationController
 
     respond_to do |f|
       if @payment.save
-        f.html { redirect_to @order, notice: 'Payment was successfully created.' }
+        f.html do
+          flash[:success] = 'Payment was successfully created.'
+          redirect_to @order
+        end
       else
-        f.html { redirect_to @order, alert: 'Error adding payment: ' + @payment.errors.full_messages.join(', ') }
+        f.html do
+          flash[:warning] = 'Error adding payment: ' + @payment.errors.full_messages.join(', ')
+          redirect_to @order
+        end
       end
     end
   end
@@ -20,11 +26,15 @@ class PaymentsController < ApplicationController
     set_order
 
     if @payment.order.fulfilled?
-      redirect_to @order, alert: 'You cannot remove payments on a fulfilled order.'
+      flash[:warning] = 'You cannot remove payments on a fulfilled order.'
+      redirect_to @order
     else
       @payment.destroy
       respond_to do |f|
-        f.html { redirect_to @order, notice: 'Payment was successfully destroyed.' }
+        f.html do
+          flash[:success] = 'Payment was successfully destroyed.'
+          redirect_to @order
+        end
       end
     end
   end

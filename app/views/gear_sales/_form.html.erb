@@ -1,0 +1,21 @@
+<%= form_with model: @gear_sale, local: true do |f| %>
+  <% if @gear_sale.errors.any? %>
+    <div class="alert alert-warning" role="alert">
+      The following errors prevented this gear sale from being saved:
+      <ul class="mb-0">
+        <% @gear_sale.errors.full_messages.each do |error| %>
+          <li><%= error %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <label for="gear_sale_name">Name</label>
+    <%= f.text_field :name, class: 'form-control', placeholder: "Name" %>
+    <small class="form-text text-muted">For example, "Autumn 2019."</small>
+  </div>
+  <div class="form-group">
+    <%= f.submit class: 'btn btn-primary' %>
+  </div>
+<% end %>

@@ -5,7 +5,7 @@ class ItemsController < ApplicationController
   # GET /items
   # GET /items.json
   def index
-    @items = Item.order(:created_at).all
+    @items = Item.order(:created_at).where(gear_sale: GearSale.active_sale)
   end
 
   # GET /items/1
@@ -26,6 +26,7 @@ class ItemsController < ApplicationController
   # POST /items.json
   def create
     @item = Item.new(item_params)
+    @item.gear_sale = GearSale.active_sale
 
     respond_to do |format|
       if @item.save

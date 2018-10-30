@@ -3,4 +3,5 @@ class Size < ApplicationRecord
   has_many :purchases
 
   validates_uniqueness_of :size
+  validates_presence_of :size
 end

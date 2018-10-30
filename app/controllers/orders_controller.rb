@@ -6,7 +6,7 @@ class OrdersController < ApplicationController
   # GET /orders
   # GET /orders.json
   def index
-    @orders = params[:only_final] ? Order.order(:created_at).where(confirmed: true) : Order.order(:created_at).all
+    @orders = params[:only_final] ? Order.order(:created_at).where(confirmed: true, gear_sale: GearSale.active_sale) : Order.order(:created_at).all
   end
 
   # GET /orders/1
@@ -26,13 +26,18 @@ class OrdersController < ApplicationController
   # POST /orders
   # POST /orders.json
   def create
+
     @order = Order.new(order_params)
+    @order.gear_sale = GearSale.active_sale
 
     respond_to do |format|
       if @order.save
         OrderMailer.order_created(@order).deliver_later
 
-        format.html { redirect_to @order, notice: 'Order was successfully created.' }
+        format.html do
+          flash[:success] = 'Order was successfully created.'
+          redirect_to @order
+        end
         format.json { render :show, status: :created, location: @order }
       else
         format.html { render :new }
@@ -46,13 +51,19 @@ class OrdersController < ApplicationController
   def update
     respond_to do |format|
       if @order.confirmed? && !user_signed_in?
-        format.html { redirect_to @order, notice: 'You cannot make changes to an order once it\'s finalized. Please let us know if you need to make a change.' }
+        format.html do
+          flash[:warning] = 'You cannot make changes to an order once it\'s finalized. Please let us know if you need to make a change.'
+          redirect_to @order
+        end
         format.json { render :show, status: 400, location: @order }
         return
       end
 
       if @order.update(order_params)
-        format.html { redirect_to @order, notice: 'Order was successfully updated.' }
+        format.html do
+          flash[:success] = 'Order was successfully updated.'
+          redirect_to @order
+        end
         format.json { render :show, status: :ok, location: @order }
       else
         format.html { render :edit }
@@ -66,7 +77,10 @@ class OrdersController < ApplicationController
   def destroy
    if @order.payments.size > 0
      respond_to do |format|
-       format.html { redirect_to orders_url, alert: 'Payment have been made on this order. Please remove them before removing the order.' }
+       format.html do
+         flash[:warning] = 'Payment have been made on this order. Please remove them before removing the order.'
+         redirect_to orders_url
+       end
        format.json { head :no_content }
      end
      return
@@ -74,7 +88,10 @@ class OrdersController < ApplicationController
 
     @order.destroy
     respond_to do |format|
-      format.html { redirect_to orders_url, notice: 'Order was successfully destroyed.' }
+      format.html do
+        flash[:success] = 'Order was successfully destroyed.'
+        redirect_to orders_url
+      end
       format.json { head :no_content }
     end
   end
@@ -84,9 +101,11 @@ class OrdersController < ApplicationController
 
     if @order.confirmed? && @order.total - @order.amount_paid == 0
       @order.update_attributes fulfilled: !@order.fulfilled
-      redirect_to orders_path, notice: 'Updated successfully.'
+      flash[:success] = 'Updated successfully.'
+      redirect_to orders_path
     else
-      redirect_to orders_path, alert: 'Order must be finalized and fully paid first.'
+      flash[:warning] = 'Order must be finalized and fully paid first.'
+      redirect_to orders_path
     end
   end
 
@@ -98,19 +117,23 @@ class OrdersController < ApplicationController
     if @order.confirmed?
       authenticate_user!
       if @order.fulfilled?
-        redirect_to target, alert: 'You cannot un-finalize a fulfilled order.'
+        flash[:warning] = 'You cannot un-finalize a fulfilled order.'
+        redirect_to target
       else
         @order.update_attributes confirmed: false
-        redirect_to target, notice: 'Unfinalized successfully.'
+        flash[:success] = 'Un-finalized successfully.'
+        redirect_to target
       end
     else
       if @order.purchases.count == 0
-        redirect_to target, alert: 'You cannot finalize an empty order. Please add some items first.'
+        flash[:warning] = 'You cannot finalize an empty order. Please add some items first.'
+        redirect_to target
         return
       end
 
       @order.update_attributes confirmed: true
-      redirect_to target, notice: 'Finalized successfully.'
+      flash[:success] = 'Finalized successfully.'
+      redirect_to target
     end
   end
 
@@ -120,7 +143,8 @@ class OrdersController < ApplicationController
   def create_purchase
     set_order
     @order.purchases.create! item_id: params[:item_id], size_id: params[:size_id]
-    redirect_to @order, notice: 'Item was successfully added.'
+    flash[:success] = 'Item was successfully added.'
+    redirect_to @order
   end
 
   def unfinished_order_mail
@@ -130,7 +154,8 @@ class OrdersController < ApplicationController
       OrderMailer.unfinished_order(o).deliver_later
     end
 
-    redirect_to root_path, notice: "Successfully sent #{@orders.count} #{'email'.pluralize @orders.count}."
+    flash[:success] = "Successfully sent #{@orders.count} #{'email'.pluralize @orders.count}."
+    redirect_to root_path
   end
 
   private
