@@ -3,13 +3,11 @@ class ItemsController < ApplicationController
   before_action :authenticate_user!
 
   # GET /items
-  # GET /items.json
   def index
     @items = GearSale.active_sale.items.order(:created_at)
   end
 
   # GET /items/1
-  # GET /items/1.json
   def show
   end
 
@@ -23,63 +21,43 @@ class ItemsController < ApplicationController
   end
 
   # POST /items
-  # POST /items.json
   def create
     @item = Item.new(item_params)
     @item.gear_sale = GearSale.active_sale
 
-    respond_to do |format|
-      if @item.save
-        format.html do
-          flash[:success] = 'Item was successfully created.'
-          redirect_to @item
-        end
-        format.json { render :show, status: :created, location: @item }
-      else
-        format.html { render :new }
-        format.json { render json: @item.errors, status: :unprocessable_entity }
-      end
+    if @item.save
+      flash[:success] = 'Item was successfully created.'
+      redirect_to @item
+    else
+      render :new
     end
   end
 
   # PATCH/PUT /items/1
-  # PATCH/PUT /items/1.json
   def update
-    respond_to do |format|
-      if @item.update(item_params)
-        format.html do
-          flash[:success] = 'Item was successfully updated.'
-          redirect_to @item
-        end
-        format.json { render :show, status: :ok, location: @item }
-      else
-        format.html { render :edit }
-        format.json { render json: @item.errors, status: :unprocessable_entity }
-      end
+    if @item.update(item_params)
+      flash[:success] = 'Item was successfully updated.'
+      redirect_to @item
+    else
+      render :edit
     end
   end
+end
 
-  # DELETE /items/1
-  # DELETE /items/1.json
-  def destroy
-    @item.destroy
-    respond_to do |format|
-      format.html do
-        flash[:success] = 'Item was successfully destroyed.'
-        redirect_to items_url
-      end
-      format.json { head :no_content }
-    end
-  end
+# DELETE /items/1
+def destroy
+  @item.destroy
+  flash[:success] = 'Item was successfully destroyed.'
+  redirect_to items_url
+end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_item
-      @item = Item.find(params[:id])
-    end
+private
+# Use callbacks to share common setup or constraints between actions.
+def set_item
+  @item = Item.find(params[:id])
+end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def item_params
-      params.fetch(:item, {}).permit(:name, :description, :photo, :price, size_ids: [])
-    end
+# Never trust parameters from the scary internet, only allow the white list through.
+def item_params
+  params.fetch(:item, {}).permit(:name, :description, :photo, :price, size_ids: [])
 end

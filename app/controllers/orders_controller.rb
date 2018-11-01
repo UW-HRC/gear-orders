@@ -4,7 +4,6 @@ class OrdersController < ApplicationController
   before_action :verify_open, only: [:new, :create, :edit, :update, :new_purchase, :create_purchase]
 
   # GET /orders
-  # GET /orders.json
   def index
     @orders = params[:only_final] ?
                   GearSale.active_sale.orders.order(:created_at).where(confirmed: true) :
@@ -12,7 +11,6 @@ class OrdersController < ApplicationController
   end
 
   # GET /orders/1
-  # GET /orders/1.json
   def show
     @order = Order.includes(:purchases, :payments).find(params[:id])
   end
@@ -27,29 +25,21 @@ class OrdersController < ApplicationController
   end
 
   # POST /orders
-  # POST /orders.json
   def create
     @order = Order.new(order_params)
     @order.gear_sale = GearSale.active_sale
 
-    respond_to do |format|
-      if @order.save
-        OrderMailer.order_created(@order).deliver_later
+    if @order.save
+      OrderMailer.order_created(@order).deliver_later
 
-        format.html do
-          flash[:success] = 'Order was successfully created.'
-          redirect_to @order
-        end
-        format.json { render :show, status: :created, location: @order }
-      else
-        format.html { render :new }
-        format.json { render json: @order.errors, status: :unprocessable_entity }
-      end
+      flash[:success] = 'Order was successfully created.'
+      redirect_to @order
+    else
+      render :new
     end
   end
 
   # PATCH/PUT /orders/1
-  # PATCH/PUT /orders/1.json
   def update
     if @order.confirmed? && !user_signed_in?
       flash[:warning] = 'You cannot make changes to an order once it\'s finalized. Please let us know if you need to make a change.'
@@ -63,7 +53,6 @@ class OrdersController < ApplicationController
   end
 
   # DELETE /orders/1
-  # DELETE /orders/1.json
   def destroy
     if @order.payments.size > 0
       flash[:warning] = 'Payment have been made on this order. Please remove them before removing the order.'

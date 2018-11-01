@@ -1,6 +1,5 @@
 class PurchasesController < ApplicationController
   # DELETE /purchases/1
-  # DELETE /purchases/1.json
   def destroy
     set_order
     set_purchase
