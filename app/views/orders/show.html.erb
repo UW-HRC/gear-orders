@@ -19,10 +19,8 @@
           </div>
         <% else %>
           <div class="alert alert-success">
-            Your order has been finalized! Please bring payment via cash, check, or by sending the grand total amount to <b>@huskyrunningclub</b> on Venmo.
-            <br>
+            Your order has been finalized! Please bring payment via cash, check made out to <b>UW Husky Running Club</b>, or by sending the grand total amount to <b>@huskyrunningclub</b> on Venmo.
             Once you make a payment, the amount should be updated here within a day or so. You can check the status of this order by visiting this link.
-            <br>
             We will let you know once gear orders arrive!
           </div>
         <% end %>
@@ -90,7 +88,12 @@
   <div class="col">
     <div class="card border-success">
       <div class="card-body">
-        <h5 class="card-title mb-0">Order Actions</h5>
+        <h4 class="card-title">Order Actions</h4>
+        <% if @order.confirmed? && !user_signed_in? %>
+          <p class="mb-0">
+            You're all set! We'll make an announcement when gear orders arrive. Please make sure you've paid for your order.
+          </p>
+        <% end %>
       </div>
       <ul class="list-group list-group-flush">
         <% unless @order.confirmed? %>
@@ -113,12 +116,6 @@
         <% if @order.confirmed? && user_signed_in? && !@order.fulfilled? %>
           <%= link_to 'Un-Finalize Order', toggle_finalized_path(@order), method: :patch, class: 'list-group-item list-group-item-action list-group-item-warning' %>
         <% end %>
-
-        <% if @order.confirmed? && !user_signed_in? %>
-          <div class="card-body">
-            <i>You're all set! We'll make an announcement when gear orders arrive. Please make sure you've paid for your order.</i>
-          </div>
-        <% end %>
       </ul>
     </div>
     <% if user_signed_in? %>
@@ -130,7 +127,7 @@
     <div class="card bg-light border-primary">
       <div class="card-body">
         <h4 class="card-title">Payment History</h4>
-        <p>Payments can be made via cash, check, or Venmo to: <b>@huskyrunningclub</b>.</p>
+        <p>Payments can be made via cash, check made out to <b>UW Husky Running Club</b>, or Venmo to <b>@huskyrunningclub</b>.</p>
         <table class="table table-sm">
           <thead>
           <tr>

@@ -6,6 +6,9 @@ class ApplicationController < ActionController::Base
     if active_sale.nil? || !active_sale.open?
       flash[:warning] = 'Unfortunately, gear orders are closed.'
       redirect_to root_path
+      false
+    else
+      true
     end
   end
 end

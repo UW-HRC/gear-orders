@@ -114,8 +114,7 @@ class OrdersController < ApplicationController
 
     target = params[:all] ? orders_path : @order
 
-    unless user_signed_in?
-      verify_open
+    unless user_signed_in? || verify_open
       return
     end
 
