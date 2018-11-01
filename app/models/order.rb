@@ -16,7 +16,7 @@ class Order < ApplicationRecord
   end
 
   def total
-    self.purchases.reduce(0) do |acc, p|
+    self.purchases.select{|p| p.item.sizes.include?(p.size)}.reduce(0) do |acc, p|
       acc + (p.item.price)
     end
   end

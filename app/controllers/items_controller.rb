@@ -5,7 +5,7 @@ class ItemsController < ApplicationController
   # GET /items
   # GET /items.json
   def index
-    @items = Item.order(:created_at).where(gear_sale: GearSale.active_sale)
+    @items = GearSale.active_sale.items.order(:created_at)
   end
 
   # GET /items/1

@@ -35,7 +35,7 @@
       <% else %>
         <div class="alert alert-warning">
           Unfortunately, gear orders are now closed for this sale. If you are still interested in ordering gear, please
-          contact us directly as soon as possible, and we may be able to accomodate your order.
+          contact us directly as soon as possible, and we may be able to accommodate your order.
         </div>
       <% end %>
     <% end %>
@@ -51,12 +51,13 @@
         <% end %>
       </tr>
       </thead>
-      <tbody>
+      <% unavailable_items = false %>
       <% @order.purchases.each do |p| %>
-        <tr>
+        <% available = p.item.sizes.include?(p.size); unavailable_items ||= !available %>
+        <tr<% unless available %> class='table-warning font-weight-light'<% end %>>
           <td><%= number_to_currency p.item.price %></td>
           <td><%= p.item.name %></td>
-          <td><%= p.size.size %></td>
+          <td><%= p.size.size %><% unless p.item.sizes.include?(p.size) %><span class="text-danger font-weight-bold"> **</span><% end %></td>
           <td><%= number_to_currency(p.item.price) %></td>
           <% unless @order.confirmed? %>
             <td>
@@ -75,9 +76,17 @@
       </tbody>
     </table>
 
+    <% if unavailable_items %>
+      <p>
+        <span class="text-danger"><b>**</b></span> <b>NB:</b> This item is currently unavailable in this size.
+        Your order total will not include the price of this item. If you still wish to purchase this item, please remove
+        it and select a new size. Let an officer know if you have and questions!
+      </p>
+    <% end %>
+
   </div>
 </div>
-<div class="row">
+<div class="row mb-5">
   <div class="col">
     <div class="card border-success">
       <div class="card-body">
@@ -118,7 +127,6 @@
   </div>
 
   <div class="col">
-
     <div class="card bg-light border-primary">
       <div class="card-body">
         <h4 class="card-title">Payment History</h4>
@@ -160,19 +168,20 @@
             <%= f.label :amount, class: 'sr-only' %>
 
             <div class="input-group">
-              <div class="input-group-addon">$</div>
+              <div class="input-group-prepend"><span class="input-group-text">$</span></div>
               <%= f.number_field :amount, placeholder: 'Amount', step: 0.01, class: 'form-control', id: 'payment_amount', style: 'width: 150px;' %>
+              <div class="input-group-append">
+                <%= f.select :method, options_for_select([["Method", ""]] + Payment.methods.keys.map {|x| [x.humanize, x]}), {}, class: 'custom-select mr-2', style: 'border-top-left-radius: 0px;border-bottom-left-radius: 0px;' %>
+              </div>
             </div>
 
-            <%= f.label :method, class: 'sr-only' %>
-            <%= f.select :method, options_for_select([["Method", ""]] + Payment.methods.keys.map {|x| [x.humanize, x]}), {}, class: 'custom-select mr-2' %>
-            <%= f.submit class: 'btn btn-primary' %>
+            <div class="input-group">
+              <%= f.submit class: 'btn btn-primary' %>
+            </div>
           <% end %>
         </div>
       <% end %>
     </div>
-    <!-- eh, heck it -->
-    <br>
   </div>
 </div>
 

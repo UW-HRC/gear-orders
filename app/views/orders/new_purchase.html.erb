@@ -2,7 +2,7 @@
 
 <div class="card-columns">
 
-  <% Item.order('name').where(gear_sale: GearSale.active_sale).each do |item| %>
+  <% GearSale.active_sale.items.order('name').each do |item| %>
       <div class="card">
         <% unless item.photo.file.nil? %>
             <%= image_tag item.photo.url, class: 'card-img-top' %>

@@ -27,7 +27,6 @@ class OrdersController < ApplicationController
   # POST /orders
   # POST /orders.json
   def create
-
     @order = Order.new(order_params)
     @order.gear_sale = GearSale.active_sale
 
