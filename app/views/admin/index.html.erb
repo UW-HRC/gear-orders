@@ -4,9 +4,9 @@
   <%= link_to 'Update your profile or password', edit_user_registration_path %>.
 </p>
 
-<div class="row">
+<div class="row mb-5">
   <div class="col">
-    <div class="card">
+    <div class="card border-primary">
       <% if @active_sale %>
         <div class="card-body">
           <h5 class="card-title">
@@ -50,6 +50,12 @@
             <%= link_to 'Deactivate This Sale', toggle_sale_active_path(@active_sale.id), method: :patch, data: {confirm: "Are you sure you want to deactivate this sale?"} %>
             <p class="mb-1">
               <small>Mark this gear sale as inactive. You won't be able to access any information about the sale unless it is reactivated.</small>
+            </p>
+          </li>
+          <li class="list-group-item list-group-item-warning">
+            <%= link_to 'Delete This Sale', gear_sale_path(@active_sale), method: :delete, data: {confirm: "Are you sure you want to destroy this gear sale with all associated items and orders?"}, class: 'text-muted' %>
+            <p class="mb-1">
+              <small><b>NB:</b> deleting this sale will delete <b>all associated items and orders!</b> In nearly all cases, deactivating the sale is probably a better option.</small>
             </p>
           </li>
         </ul>

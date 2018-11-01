@@ -26,7 +26,7 @@ Rails.application.routes.draw do
   resources :admin, only: [:index]
 
   # index page for gear sales is provided by the admin interface
-  resources :gear_sales, only: [:new, :create, :edit, :update]
+  resources :gear_sales, only: [:new, :create, :edit, :update, :destroy]
 
   patch '/gear_sales/:id/toggle_active', to: 'gear_sales#toggle_active', as: 'toggle_sale_active'
   patch '/gear_sales/:id/toggle_open', to: 'gear_sales#toggle_open', as: 'toggle_sale_open'

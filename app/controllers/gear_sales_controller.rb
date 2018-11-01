@@ -29,6 +29,13 @@ class GearSalesController < ApplicationController
     end
   end
 
+  def destroy
+    set_gear_sale
+    @gear_sale.destroy
+    flash[:success] = "Gear sale was destroyed."
+    redirect_to admin_index_path
+  end
+
   def toggle_active
     set_gear_sale
     @gear_sale.update active: !@gear_sale.active
