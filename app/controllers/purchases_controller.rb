@@ -6,16 +6,12 @@ class PurchasesController < ApplicationController
     set_purchase
     if @purchase.order.fulfilled?
       flash[:warning] = 'You cannot remove items on a fulfilled order.'
-      redirect_to @order
     else
       @purchase.destroy
-      respond_to do |f|
-        f.html do
-          flash[:success] = 'Item was successfully destroyed.'
-          redirect_to @order
-        end
-      end
+      flash[:success] = 'Item was successfully destroyed.'
     end
+
+    redirect_to @order
   end
 
   private

@@ -6,19 +6,15 @@ class PaymentsController < ApplicationController
     @payment = Payment.new(payment_params)
     @payment.order = @order
 
-    respond_to do |f|
-      if @payment.save
-        f.html do
-          flash[:success] = 'Payment was successfully created.'
-          redirect_to @order
-        end
-      else
-        f.html do
-          flash[:warning] = 'Error adding payment: ' + @payment.errors.full_messages.join(', ')
-          redirect_to @order
-        end
-      end
+    if @order.fulfilled?
+      flash[:warning] = 'You cannot add payments to a fulfilled order.'
+    elsif @payment.save
+      flash[:success] = 'Payment was successfully created.'
+    else
+      flash[:warning] = 'Error adding payment: ' + @payment.errors.full_messages.join(', ')
     end
+
+    redirect_to @order
   end
 
   def destroy
@@ -27,28 +23,24 @@ class PaymentsController < ApplicationController
 
     if @payment.order.fulfilled?
       flash[:warning] = 'You cannot remove payments on a fulfilled order.'
-      redirect_to @order
     else
       @payment.destroy
-      respond_to do |f|
-        f.html do
-          flash[:success] = 'Payment was successfully destroyed.'
-          redirect_to @order
-        end
-      end
+      flash[:success] = 'Payment was successfully destroyed.'
     end
+
+    redirect_to @order
   end
 
   private
-    def set_payment
-      @payment = Payment.find(params[:id])
-    end
+  def set_payment
+    @payment = Payment.find(params[:id])
+  end
 
-    def set_order
-      @order = Order.find(params[:order_id])
-    end
+  def set_order
+    @order = Order.find(params[:order_id])
+  end
 
-    def payment_params
-      params.require(:payment).permit(:amount, :method)
-    end
+  def payment_params
+    params.require(:payment).permit(:amount, :method)
+  end
 end

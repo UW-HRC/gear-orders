@@ -1,18 +1,20 @@
 class OrdersController < ApplicationController
-  before_action :set_order, only: [:show, :edit, :update, :destroy, :new_purchase, :create_purchase]
-  before_action :authenticate_user!, only: [:index, :unfinalize, :destroy, :toggle_fulfilled]
+  before_action :set_order, only: [:edit, :update, :destroy, :new_purchase, :create_purchase]
+  before_action :authenticate_user!, only: [:index, :destroy, :toggle_fulfilled]
   before_action :verify_open, only: [:new, :create, :edit, :update, :new_purchase, :create_purchase]
 
   # GET /orders
   # GET /orders.json
   def index
-    @orders = params[:only_final] ? Order.order(:created_at).where(confirmed: true, gear_sale: GearSale.active_sale) :
-                  Order.order(:created_at).where(gear_sale: GearSale.active_sale)
+    @orders = params[:only_final] ?
+                  GearSale.active_sale.orders.order(:created_at).where(confirmed: true) :
+                  GearSale.active_sale.orders.order(:created_at)
   end
 
   # GET /orders/1
   # GET /orders/1.json
   def show
+    @order = Order.includes(:purchases, :payments).find(params[:id])
   end
 
   # GET /orders/new
@@ -49,51 +51,28 @@ class OrdersController < ApplicationController
   # PATCH/PUT /orders/1
   # PATCH/PUT /orders/1.json
   def update
-    respond_to do |format|
-      if @order.confirmed? && !user_signed_in?
-        format.html do
-          flash[:warning] = 'You cannot make changes to an order once it\'s finalized. Please let us know if you need to make a change.'
-          redirect_to @order
-        end
-        format.json { render :show, status: 400, location: @order }
-        return
-      end
-
-      if @order.update(order_params)
-        format.html do
-          flash[:success] = 'Order was successfully updated.'
-          redirect_to @order
-        end
-        format.json { render :show, status: :ok, location: @order }
-      else
-        format.html { render :edit }
-        format.json { render json: @order.errors, status: :unprocessable_entity }
-      end
+    if @order.confirmed? && !user_signed_in?
+      flash[:warning] = 'You cannot make changes to an order once it\'s finalized. Please let us know if you need to make a change.'
+      redirect_to @order
+    elsif @order.update(order_params)
+      flash[:success] = 'Order was successfully updated.'
+      redirect_to @order
+    else
+      render :edit
     end
   end
 
   # DELETE /orders/1
   # DELETE /orders/1.json
   def destroy
-   if @order.payments.size > 0
-     respond_to do |format|
-       format.html do
-         flash[:warning] = 'Payment have been made on this order. Please remove them before removing the order.'
-         redirect_to orders_url
-       end
-       format.json { head :no_content }
-     end
-     return
-   end
-
-    @order.destroy
-    respond_to do |format|
-      format.html do
-        flash[:success] = 'Order was successfully destroyed.'
-        redirect_to orders_url
-      end
-      format.json { head :no_content }
+    if @order.payments.size > 0
+      flash[:warning] = 'Payment have been made on this order. Please remove them before removing the order.'
+    else
+      @order.destroy
+      flash[:success] = 'Order was successfully destroyed.'
     end
+
+    redirect_to orders_path
   end
 
   def toggle_fulfilled
@@ -102,11 +81,11 @@ class OrdersController < ApplicationController
     if @order.confirmed? && @order.total - @order.amount_paid == 0
       @order.update_attributes fulfilled: !@order.fulfilled
       flash[:success] = 'Updated successfully.'
-      redirect_to orders_path
     else
       flash[:warning] = 'Order must be finalized and fully paid first.'
-      redirect_to orders_path
     end
+
+    redirect_to orders_path
   end
 
   def toggle_finalized
@@ -170,13 +149,13 @@ class OrdersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_order
-      @order = Order.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_order
+    @order = Order.find(params[:id])
+  end
 
-    # Never trust parameters from the scary internet, only allow the white list through.
-    def order_params
-      params.fetch(:order, {}).permit(:first_name, :last_name, :email)
-    end
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def order_params
+    params.fetch(:order, {}).permit(:first_name, :last_name, :email)
+  end
 end
