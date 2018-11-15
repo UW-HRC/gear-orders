@@ -1,0 +1,66 @@
+<h1>My Orders</h1>
+
+<div class="row mb-4">
+  <div class="col">
+    <div class="card border-primary">
+      <div class="card-body pb-0">
+        <h5 class="card-title">
+          Current Order
+        </h5>
+      </div>
+      <% if @current_order %>
+        <div class="card-body pt-0">
+          <p class="card-text">
+            You have an order for <b><%= GearSale.active_sale.name %></b> with <b><%= @current_order.purchases.count %></b> <%= 'item'.pluralize @current_order.purchases.count %> totalling <b><%= number_to_currency @current_order.total %></b>.
+          </p>
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><b>Payment Status: </b><%= @current_order.total - @current_order.amount_paid > 0 ? "<span class='text-danger'>#{number_to_currency @current_order.total - @current_order.amount_paid} due</span>".html_safe : "<span class='text-success'>Fully Paid</span>".html_safe %></li>
+          <li class="list-group-item"><b>Fulfillment Status:</b> <%= @current_order.fulfilled? ? "<span class='text-success'>Fulfilled</span>".html_safe : "<span class='text-danger'>Not yet fulfilled</span>".html_safe %></li>
+        </ul>
+        <div class="card-body pt-0">
+          <p class="card-text">
+            <%= link_to 'View And Edit This Order', @current_order, class: 'btn btn-primary mt-3' %>
+          </p>
+        </div>
+      <% elsif GearSale.active_sale %>
+        <div class="card-body pt-0">
+          <p class="card-text">
+            You don't have an order yet for this gear sale.
+            <br>
+            <%= link_to 'Create An Order', orders_path, class: 'btn btn-success mt-3', method: :post %>
+          </p>
+        </div>
+      <% else %>
+        <div class="card-body pt-0">
+          <p class="card-text">Gear orders are currently closed. We will make an announcement when they open.</p>
+        </div>
+
+      <% end %>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    <div class="card border-secondary">
+      <div class="card-body pb-0">
+        <h5 class="card-title">Past Orders</h5>
+      </div>
+      <% if @past_orders.empty? %>
+        <div class="card-body pt-0">
+          <p class="card-text">
+            You have no past orders.
+          </p>
+        </div>
+      <% else %>
+
+        <ul class="list-group list-group-flush">
+          <% @past_orders.each do |order| %>
+            <li class="list-group-item"><%= link_to order.gear_sale.name, order %></li>
+          <% end %>
+        </ul>
+      <% end %>
+
+    </div>
+  </div>
+</div>

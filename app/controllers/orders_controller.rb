@@ -1,6 +1,8 @@
 class OrdersController < ApplicationController
-  before_action :set_order, only: [:edit, :update, :destroy, :new_purchase, :create_purchase]
-  before_action :authenticate_user!, only: [:index, :destroy, :toggle_fulfilled]
+  before_action :authenticate_user!
+
+  # only admins are allowed to view all orders, delete orders, and toggle fulfilled
+  before_action :authenticate_admin!, only: [:index, :destroy, :toggle_fulfilled]
   before_action :verify_open, only: [:new, :create, :edit, :update, :new_purchase, :create_purchase]
 
   # GET /orders
@@ -10,28 +12,31 @@ class OrdersController < ApplicationController
                   GearSale.active_sale.orders.order(:created_at)
   end
 
-  # GET /orders/1
-  def show
-    @order = Order.includes(:purchases, :payments).find(params[:id])
+  # GET /my_orders
+  # This just shows the user's orders, as opposed to the admin path which shows all orders for the active sale
+  def index_for_user
+    # each user should only have one order per sale
+    @orders = current_user.orders
+    @current_order = @orders.where(gear_sale: GearSale.active_sale).first
+    @past_orders = @orders.where.not(gear_sale: GearSale.active_sale)
   end
 
-  # GET /orders/new
-  def new
-    @order = Order.new
+  # GET /orders/1
+  def show
+    set_order
   end
 
   # GET /orders/1/edit
   def edit
+    set_order
   end
 
   # POST /orders
   def create
-    @order = Order.new(order_params)
+    @order = current_user.orders.new(order_params)
     @order.gear_sale = GearSale.active_sale
 
     if @order.save
-      OrderMailer.order_created(@order).deliver_later
-
       flash[:success] = 'Order was successfully created.'
       redirect_to @order
     else
@@ -39,21 +44,10 @@ class OrdersController < ApplicationController
     end
   end
 
-  # PATCH/PUT /orders/1
-  def update
-    if @order.confirmed? && !user_signed_in?
-      flash[:warning] = 'You cannot make changes to an order once it\'s finalized. Please let us know if you need to make a change.'
-      redirect_to @order
-    elsif @order.update(order_params)
-      flash[:success] = 'Order was successfully updated.'
-      redirect_to @order
-    else
-      render :edit
-    end
-  end
-
   # DELETE /orders/1
   def destroy
+    set_order
+
     if @order.payments.size > 0
       flash[:warning] = 'Payment have been made on this order. Please remove them before removing the order.'
     else
@@ -87,7 +81,7 @@ class OrdersController < ApplicationController
     end
 
     if @order.confirmed?
-      authenticate_user!
+      authenticate_admin!
       if @order.fulfilled?
         flash[:warning] = 'You cannot un-finalize a fulfilled order.'
         redirect_to target
@@ -110,6 +104,7 @@ class OrdersController < ApplicationController
   end
 
   def new_purchase
+    set_order
   end
 
   def create_purchase
@@ -140,7 +135,12 @@ class OrdersController < ApplicationController
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_order
-    @order = Order.find(params[:id])
+    if admin_signed_in?
+      # admins are allowed to access all orders
+      @order = Order.find(params[:id])
+    else
+      @order = current_user.orders.find(params[:id])
+    end
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

@@ -4,4 +4,8 @@ module ApplicationHelper
       n + purchase.quantity
     end
   end
+
+  def admin_signed_in?
+    current_user.admin?
+  end
 end

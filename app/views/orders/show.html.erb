@@ -1,9 +1,9 @@
-<%= provide(:title, "HRC Order for #{@order.first_name} #{@order.last_name}") %>
+<%= provide(:title, "HRC Order for #{@order.user.display_name}") %>
 
 <div class="row">
   <div class="col-md-12">
-    <h1>Order for <%= @order.first_name %> <%= @order.last_name %> <span class="float-right"><small><%= @order.email %></small></span></h1>
-    <% if user_signed_in? %>
+    <h1>Order for <%= @order.user.display_name %> <span class="float-right"><small><%= @order.user.email %></small></span></h1>
+    <% if admin_signed_in? %>
       <div class="card">
         <div class="card-body">
           <h4 class="card-title">Order Status</h4>
@@ -27,8 +27,6 @@
       <% elsif @order.gear_sale.open? %>
         <div class="alert alert-info">
           Add items to your order by clicking the "Add Item To Order" link below. Once you're done adding items, click "Finalize Order."
-          <br>
-          If you haven't made up your mind yet, you can return to this page anytime by <%= link_to 'bookmarking it', @order %>.
         </div>
       <% else %>
         <div class="alert alert-warning">
@@ -84,43 +82,48 @@
 
   </div>
 </div>
+
+
 <div class="row mb-5">
   <div class="col">
-    <div class="card border-success">
-      <div class="card-body">
-        <h4 class="card-title">Order Actions</h4>
-        <% if @order.confirmed? && !user_signed_in? %>
-          <p class="mb-0">
-            You're all set! We'll make an announcement when gear orders arrive. Please make sure you've paid for your order.
-          </p>
-        <% end %>
-      </div>
-      <ul class="list-group list-group-flush">
-        <% unless @order.confirmed? %>
-          <li class="list-group-item">
-            <%= link_to 'Add Item To Order', orders_new_purchase_path(@order) %>
-          </li>
-          <li class="list-group-item">
-            <%= link_to 'Change Name and Email', edit_order_path(@order) %>
-          </li>
-          <li class="list-group-item">
-            <p class="mb-1">
-              <%= link_to 'Finalize Order', toggle_finalized_path(@order), method: :patch, 'data-confirm': 'Once you finalize this order, you will be unable to change it. Are you sure?'%>
+    <% if @order.gear_sale.active? %>
+      <div class="card border-success">
+        <div class="card-body">
+          <h4 class="card-title">Order Actions</h4>
+          <% if @order.confirmed? && !admin_signed_in? %>
+            <p class="mb-0">
+              You're all set! We'll make an announcement when gear orders arrive. Please make sure you've paid for your order.
             </p>
-            <% unless user_signed_in? %>
-              <small>You won't be able to make changes to your order once it's finalized.</small>
-            <% end %>
-          </li>
-        <% end %>
+          <% end %>
+        </div>
+        <ul class="list-group list-group-flush">
+          <% unless @order.confirmed? %>
+            <li class="list-group-item">
+              <%= link_to 'Add Item To Order', orders_new_purchase_path(@order) %>
+            </li>
+            <li class="list-group-item">
+              <p class="mb-1">
+                <%= link_to 'Finalize Order', toggle_finalized_path(@order), method: :patch, 'data-confirm': 'Once you finalize this order, you will be unable to change it. Are you sure?'%>
+              </p>
+              <% unless admin_signed_in? %>
+                <small>You won't be able to make changes to your order once it's finalized.</small>
+              <% end %>
+            </li>
+          <% end %>
 
-        <% if @order.confirmed? && user_signed_in? && !@order.fulfilled? %>
-          <%= link_to 'Un-Finalize Order', toggle_finalized_path(@order), method: :patch, class: 'list-group-item list-group-item-action list-group-item-warning' %>
-        <% end %>
-      </ul>
-    </div>
-    <% if user_signed_in? %>
-      <%= link_to 'Back To Orders', orders_path, class: 'btn btn-link' %>
+          <% if @order.confirmed? && admin_signed_in? && !@order.fulfilled? %>
+            <%= link_to 'Un-Finalize Order', toggle_finalized_path(@order), method: :patch, class: 'list-group-item list-group-item-action list-group-item-warning' %>
+          <% end %>
+        </ul>
+      </div>
+
     <% end %>
+
+    <% if admin_signed_in? && GearSale.active_sale %>
+      <%= link_to 'Back To All Orders', orders_path, class: 'btn btn-link mt-2' %>
+    <% end %>
+
+    <%= link_to 'Back To My Orders', user_orders_path, class: 'btn btn-link mt-2' %>
   </div>
 
   <div class="col">
@@ -134,7 +137,7 @@
             <th>Date</th>
             <th>Amount</th>
             <th>Method</th>
-            <% if user_signed_in? && !@order.fulfilled? %>
+            <% if admin_signed_in? && !@order.fulfilled? %>
               <th>Actions</th>
             <% end %>
           </tr>
@@ -145,7 +148,7 @@
               <td><%= p.created_at.strftime('%B %d, %Y') %></td>
               <td><%= number_to_currency p.amount %></td>
               <td><%= p.method.humanize %></td>
-              <% if user_signed_in? && !@order.fulfilled? %>
+              <% if admin_signed_in? && !@order.fulfilled? %>
                 <td><%= link_to 'Delete', order_payment_path(@order, p), method: :delete, 'data-confirm': 'Are you sure you want to delete this payment?' %></td>
               <% end %>
             </tr>
@@ -158,7 +161,7 @@
         <h5>Grand total: <%= number_to_currency @order.total %></h5>
         <h6>Amount due: <%= number_to_currency @order.total - @order.amount_paid %></h6>
       </div>
-      <% if user_signed_in? %>
+      <% if admin_signed_in? %>
         <div class="card-footer">
           <p>Add Payment</p>
           <%= form_with model: @order.payments.build, url: order_payments_path(@order.id), local: true, html: {class: 'form-inline'} do |f| %>

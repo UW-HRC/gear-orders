@@ -3,7 +3,7 @@ Rails.application.routes.draw do
 
   # routes for orders
   # standard RESTful routes
-  resources :orders do
+  resources :orders, except: [:new, :edit, :update] do
     resources :payments, only: [:create, :destroy]
     resources :purchases, only: [:destroy]
   end
@@ -18,6 +18,10 @@ Rails.application.routes.draw do
 
   # link a purchase to an order
   post '/orders/:id/new_purchase/:item_id/:size_id', to: 'orders#create_purchase', as: 'orders_create_purchase'
+
+  # page for showing a user's orders to them
+  # this is different from /orders, because that is used by the admin interface
+  get '/my_orders', to: 'orders#index_for_user', as: 'user_orders'
 
   # admin tools for item management
   resources :items

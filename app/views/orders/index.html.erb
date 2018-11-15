@@ -30,9 +30,9 @@
       <tbody>
       <% @orders.each do |o| %>
           <tr>
-            <td><%= link_to o.confirmed? ? '<span class=\'text-success\'>Yes'.html_safe : '<span class=\'text-warning\'>No</span>'.html_safe, toggle_finalized_path(o, all: true), method: :patch, 'data-confirm': "Toggling finalization for #{o.full_name}. Are you sure?" %></td>
-            <td><%= link_to o.fulfilled? ? '<span class=\'text-success\'>Yes'.html_safe : '<span class=\'text-warning\'>No</span>'.html_safe, toggle_fulfilled_path(o), method: :patch, 'data-confirm': "Toggling fulfillment for #{o.full_name}. Are you sure?" %></td>
-            <td><%= link_to o.full_name, o %></td>
+            <td><%= link_to o.confirmed? ? '<span class=\'text-success\'>Yes'.html_safe : '<span class=\'text-warning\'>No</span>'.html_safe, toggle_finalized_path(o, all: true), method: :patch, 'data-confirm': "Toggling finalization for #{o.user.display_name}. Are you sure?" %></td>
+            <td><%= link_to o.fulfilled? ? '<span class=\'text-success\'>Yes'.html_safe : '<span class=\'text-warning\'>No</span>'.html_safe, toggle_fulfilled_path(o), method: :patch, 'data-confirm': "Toggling fulfillment for #{o.user.display_name}. Are you sure?" %></td>
+            <td><%= link_to o.user.display_name, o %></td>
             <td><%= o.created_at.strftime '%B %d, %Y' %></td>
             <td><%= o.updated_at.strftime '%B %d, %Y' %></td>
             <td class="<% if o.total > 0 %>text-info<% else %>text-muted<% end %>"><%= number_to_currency o.total %></td>
@@ -41,7 +41,7 @@
             <td class="<% if due > 0 %>text-warning<% else %>text-success<% end %>">
               <%= number_to_currency due %>
             </td>
-            <td><%= link_to 'Delete', o, method: :delete, 'data-confirm': "Deleting #{o.full_name}. Are you sure?" %></td>
+            <td><%= link_to 'Delete', o, method: :delete, 'data-confirm': "Deleting #{o.user.display_name}. Are you sure?" %></td>
           </tr>
       <% end %>
       </tbody>

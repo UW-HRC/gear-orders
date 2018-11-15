@@ -1,4 +1,6 @@
 class PurchasesController < ApplicationController
+  before_action :authenticate_user!
+
   # DELETE /purchases/1
   def destroy
     set_order
@@ -15,20 +17,21 @@ class PurchasesController < ApplicationController
 
   private
   def set_order
-    @order = Order.find(params[:order_id])
+    @order = current_user.orders.find(params[:order_id])
     if @order.confirmed?
       flash[:warning] = 'You cannot make changes to an order once it\'s finalized. Please let us know if you need to make a change.'
       redirect_to @order
     end
   end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_purchase
+    @purchase = Purchase.find(params[:id])
+  end
+
+  # Never trust parameters from the scary internet, only allow the white list through.
+  def purchase_params
+    params.fetch(:purchase, {}).permit(:quantity, :size_id)
+  end
 end
 
-# Use callbacks to share common setup or constraints between actions.
-def set_purchase
-  @purchase = Purchase.find(params[:id])
-end
-
-# Never trust parameters from the scary internet, only allow the white list through.
-def purchase_params
-  params.fetch(:purchase, {}).permit(:quantity, :size_id)
-end

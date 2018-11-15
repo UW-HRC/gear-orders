@@ -20,10 +20,11 @@
     </button>
     <div class="collapse navbar-collapse" id="main-nav">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item"><%= link_to 'Order Gear', new_order_path, class: 'nav-link' %></li>
         <!--<li class="nav-item"><a href="#" class="nav-link">Check Order Status</a></li>-->
         <% if user_signed_in? %>
-          <li class="nav-item"><%= link_to 'Admin Panel', admin_index_path, class: 'nav-link' %></li>
+          <% if admin_signed_in? %>
+            <li class="nav-item"><%= link_to 'Admin Panel', admin_index_path, class: 'nav-link' %></li>
+          <% end %>
           <li class="nav-item"><%= link_to 'Sign Out', destroy_user_session_path, class: 'nav-link', method: :delete %></li>
         <% end %>
       </ul>
@@ -31,7 +32,7 @@
         <% if user_signed_in? %>
           <li class="nav-item"><span class="navbar-text"><%= current_user.display_name %></span></li>
         <% else %>
-          <li class="nav-item"><%= link_to 'Officer Sign-In', new_user_session_path, class: 'nav-link' %></li>
+          <li class="nav-item"><%= link_to 'Sign-In', new_user_session_path, class: 'nav-link' %></li>
         <% end %>
       </ul>
     </div>

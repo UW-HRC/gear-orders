@@ -11,4 +11,17 @@ class ApplicationController < ActionController::Base
       true
     end
   end
+
+  def authenticate_admin!
+    authenticate_user!
+    unless current_user.admin?
+      flash[:warning] = "You don't have permission to do that."
+      redirect_to root_path
+    end
+  end
+
+
+  def admin_signed_in?
+    helpers.admin_signed_in?
+  end
 end

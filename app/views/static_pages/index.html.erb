@@ -14,11 +14,10 @@
       <hr class="my-4">
       <p class="lead">
         You can use this website to order gear for Husky Running Club!
-        <% if GearSale.active_sale && GearSale.active_sale.open? %>
-          <br>
-          <%= link_to 'Order Gear', new_order_path, class: 'btn btn-primary mt-3' %>
-        <% else %>
-        <% end %>
+
+      </p>
+      <p>
+        <%= link_to 'Sign in with your UW NetID', new_user_session_path, class: 'btn btn-primary mt-1' %>
       </p>
     </div>
   </div>

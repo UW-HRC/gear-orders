@@ -4,6 +4,8 @@ class User < ApplicationRecord
       admin: 100
   }
 
+  has_many :orders
+
   def display_name
     name = ""
     name << first_name unless first_name.blank?

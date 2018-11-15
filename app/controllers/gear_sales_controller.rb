@@ -1,5 +1,5 @@
 class GearSalesController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_admin!
 
   def new
     @gear_sale = GearSale.new
@@ -38,15 +38,21 @@ class GearSalesController < ApplicationController
 
   def toggle_active
     set_gear_sale
-    @gear_sale.update active: !@gear_sale.active
-    flash[:success] = "Gear sale was updated."
+    if @gear_sale.update active: !@gear_sale.active
+      flash[:success] = "Gear sale was updated."
+    else
+      flash[:warning] = @gear_sale.errors.full_messages.join(", ")
+    end
     redirect_to admin_index_path
   end
 
   def toggle_open
     set_gear_sale
-    @gear_sale.update open: !@gear_sale.open
-    flash[:success] = "Gear sale was updated."
+    if @gear_sale.update open: !@gear_sale.open
+      flash[:success] = "Gear sale was updated."
+    else
+      flash[:warning] = @gear_sale.errors.full_messages.join(", ")
+    end
     redirect_to admin_index_path
   end
 

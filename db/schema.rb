@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181115182548) do
+ActiveRecord::Schema.define(version: 20181115195604) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,12 +48,12 @@ ActiveRecord::Schema.define(version: 20181115182548) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "confirmed", default: false
-    t.string "first_name"
-    t.string "last_name"
-    t.string "email"
     t.boolean "fulfilled", default: false
     t.bigint "gear_sale_id"
+    t.bigint "user_id", null: false
+    t.index ["gear_sale_id", "user_id"], name: "index_orders_on_gear_sale_id_and_user_id", unique: true
     t.index ["gear_sale_id"], name: "index_orders_on_gear_sale_id"
+    t.index ["user_id"], name: "index_orders_on_user_id"
   end
 
   create_table "payments", force: :cascade do |t|
@@ -106,6 +106,7 @@ ActiveRecord::Schema.define(version: 20181115182548) do
   add_foreign_key "items_sizes", "items"
   add_foreign_key "items_sizes", "sizes"
   add_foreign_key "orders", "gear_sales"
+  add_foreign_key "orders", "users"
   add_foreign_key "payments", "orders"
   add_foreign_key "purchases", "items"
   add_foreign_key "purchases", "sizes"
