@@ -100,4 +100,8 @@ Rails.application.configure do
       authentication:       'plain',
       enable_starttls_auto: true  }
 
+  routes.default_url_options = {
+      host: "gear.dawgs.run",
+      protocol: "https"
+  }
 end

@@ -58,3 +58,7 @@ gem 'devise'
 
 # for file uploads
 gem 'carrierwave', '~> 1.0'
+
+# for UW NetID authentication
+gem 'devise_saml_authenticatable'
+
