@@ -4,7 +4,7 @@ class User < ApplicationRecord
       admin: 100
   }
 
-  has_many :orders
+  has_many :orders, dependent: :destroy
 
   def display_name
     name = ""

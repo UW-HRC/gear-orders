@@ -7,6 +7,14 @@
       <div class="card">
         <div class="card-body">
           <h4 class="card-title">Order Status</h4>
+          <% unless @order.user == current_user %>
+            <p>
+              <span class="text-danger">
+                <b>Warning: </b>you are logged in as an admin user and this is not your personal order.
+                Be careful when making changes to this order.
+              </span>
+            </p>
+          <% end %>
           Finalized: <b><%= @order.confirmed? ? 'Yes' : 'No' %> <br></b>
           Fulfilled: <b><%= @order.fulfilled? ? 'Yes (order cannot be modified unless marked un-fulfilled)' : 'No' %></b>
         </div>
@@ -86,12 +94,12 @@
 
 <div class="row mb-5">
   <div class="col">
-    <% if @order.gear_sale.active? %>
+    <% if @order.gear_sale.open? || (@order.gear_sale.active? && admin_signed_in?) %>
       <div class="card border-success">
         <div class="card-body pb-1">
           <h4 class="card-title">Order Actions</h4>
           <% if @order.confirmed? && !admin_signed_in? %>
-            <p class="mb-0">
+            <p>
               You're all set! We'll make an announcement when gear orders arrive. Please make sure you've paid for your order.
             </p>
           <% end %>
