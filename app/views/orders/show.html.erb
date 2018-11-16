@@ -2,7 +2,7 @@
 
 <div class="row">
   <div class="col-md-12">
-    <h1>Order for <%= @order.user.display_name %> <span class="float-right"><small><%= @order.user.email %></small></span></h1>
+    <h1>Order for <%= @order.user.display_name %> <span class="float-right text-muted"><small><%= @order.user.email %></small></span></h1>
     <% if admin_signed_in? %>
       <div class="card">
         <div class="card-body">
@@ -88,7 +88,7 @@
   <div class="col">
     <% if @order.gear_sale.active? %>
       <div class="card border-success">
-        <div class="card-body">
+        <div class="card-body pb-1">
           <h4 class="card-title">Order Actions</h4>
           <% if @order.confirmed? && !admin_signed_in? %>
             <p class="mb-0">

@@ -1,4 +1,15 @@
-<h1>My Orders</h1>
+<div class="row">
+  <div class="col">
+    <h1>My Orders</h1>
+  </div>
+</div>
+<div class="row">
+  <div class="col mb-2">
+    <p class="lead" style="line-height: 16px;">
+      <%= current_user.display_name %> <span class="float-right"><%= current_user.email %></span>
+    </p>
+  </div>
+</div>
 
 <div class="row mb-4">
   <div class="col">
@@ -20,7 +31,7 @@
         </ul>
         <div class="card-body pt-0">
           <p class="card-text">
-            <%= link_to 'View And Edit This Order', @current_order, class: 'btn btn-primary mt-3' %>
+            <%= link_to 'View And Edit Order', @current_order, class: 'btn btn-primary mt-3' %>
           </p>
         </div>
       <% elsif GearSale.active_sale %>
@@ -42,7 +53,7 @@
 </div>
 <div class="row">
   <div class="col">
-    <div class="card border-secondary">
+    <div class="card border-secondary text-muted">
       <div class="card-body pb-0">
         <h5 class="card-title">Past Orders</h5>
       </div>

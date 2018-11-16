@@ -17,3 +17,15 @@
 .field_with_errors, .field_with_errors > input {
   @extend .is-invalid;
 }
+
+/*
+  Devise uses "notice" and "alert" classes for displaying messages.
+  So we translate them to Bootstrap's "alert-info" and "alert-warning" classes respectively for showing flash messages.
+ */
+div.alert-notice {
+  @extend .alert-info;
+}
+
+div.alert-alert {
+  @extend .alert-warning;
+}
