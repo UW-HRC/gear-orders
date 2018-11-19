@@ -2,11 +2,14 @@
 
 <div class="row">
   <div class="col-md-12">
-    <h1>Order for <%= @order.user.display_name %> <span class="float-right text-muted"><small><%= @order.user.email %></small></span></h1>
+    <h1>Order Status</h1>
+    <p class="lead">
+      <%= current_user.display_name %> <span class="float-right"><%= current_user.email %></span>
+    </p>
     <% if admin_signed_in? %>
       <div class="card">
         <div class="card-body">
-          <h4 class="card-title">Order Status</h4>
+          <h4 class="card-title">Admin Information</h4>
           <% unless @order.user == current_user %>
             <p>
               <span class="text-danger">
