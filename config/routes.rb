@@ -39,11 +39,8 @@ Rails.application.routes.draw do
 
 
   # user registration and management provided by Devise
-  # disable user registration; can only be done manually
-  devise_for :users, :skip => [:registrations]
+  # all user management is done via SAML with a separate IdP, so we don't deal with
+  # registration, editing, etc.
+  devise_for :users
 
-  as :user do
-    get 'users/edit' => 'devise/registrations#edit', :as => 'edit_user_registration'
-    put 'users' => 'devise/registrations#update', :as => 'user_registration'
-  end
 end

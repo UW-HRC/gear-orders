@@ -7,11 +7,7 @@ class User < ApplicationRecord
   has_many :orders, dependent: :destroy
 
   def display_name
-    name = ""
-    name << first_name unless first_name.blank?
-    name << " #{last_name}" unless last_name.blank?
-
-    name.blank? ? email : name
+    full_name.blank? ? email : full_name
   end
 
   # Include default devise modules. Others available are:
