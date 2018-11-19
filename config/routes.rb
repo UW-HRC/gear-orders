@@ -28,6 +28,8 @@ Rails.application.routes.draw do
 
   # admin-only index page
   resources :admin, only: [:index]
+  get '/admin/users', to: 'admin#users', as: 'admin_users'
+  patch '/admin/set_role/:id', to: 'admin#set_role', as: 'set_role'
 
   # index page for gear sales is provided by the admin interface
   resources :gear_sales, only: [:new, :create, :edit, :update, :destroy]

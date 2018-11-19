@@ -1,0 +1,24 @@
+<h1 class="mb-3">User Management</h1>
+
+<table class="table table-sm table-bordered">
+  <thead>
+  <tr>
+    <th>Email Address</th>
+    <th>Name</th>
+    <th>Role</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @users.each do |user| %>
+    <tr>
+      <td><%= user.email %></td>
+      <td><%= user.display_name %></td>
+      <td>
+        <%= form_with model: user, local: true, url: set_role_path(user) do |f| %>
+          <%= f.select :role, options_from_collection_for_select(User.roles.to_a, :first, :first, user.role), {}, onchange: 'this.form.submit();' %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

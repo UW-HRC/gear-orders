@@ -29,13 +29,13 @@
           <li class="list-group-item"><%= link_to 'View Orders', orders_path %></li>
           <li class="list-group-item"><%= link_to 'Edit Name and Status', edit_gear_sale_path(@active_sale) %></li>
           <% if @active_sale.open? %>
-          <li class="list-group-item">
-            <%= link_to 'Send Unfinished Order Reminder', unfinished_order_mail_path, 'data-confirm': 'About to send email. Are you sure?', method: :patch %>
-            <p class="mb-1">
-              <small>Send an email to everyone who has created an order, but has not yet finalized it.</small>
-            </p>
-          </li>
-            <% end %>
+            <li class="list-group-item">
+              <%= link_to 'Send Unfinished Order Reminder', unfinished_order_mail_path, 'data-confirm': 'About to send email. Are you sure?', method: :patch %>
+              <p class="mb-1">
+                <small>Send an email to everyone who has created an order, but has not yet finalized it.</small>
+              </p>
+            </li>
+          <% end %>
           <li class="list-group-item">
             <%= link_to "#{@active_sale.open? ? "Close" : "Open"} This Sale", toggle_sale_open_path(@active_sale.id), method: :patch %>
             <p class="mb-1">
@@ -94,6 +94,19 @@
             <% unless @active_sale %><%= link_to 'Activate', toggle_sale_active_path(sale.id), method: :patch, data: {confirm: "Are you sure you want to activate this sale?"}, class: 'btn btn-info btn-sm' %>
             <% end %></li>
         <% end %>
+      </ul>
+    </div>
+    <div class="card mt-4">
+      <div class="card-body pb-2">
+        <h5 class="card-title">User Management</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <%= link_to 'Manage User Permissions', admin_users_path %>
+          <p class="mb-1">
+            <small>Set site administrators and roles.</small>
+          </p>
+        </li>
       </ul>
     </div>
   </div>
