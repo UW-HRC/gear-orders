@@ -89,7 +89,7 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  config.action_mailer.default_url_options = { host: 'kyle.dawgs.run' }
+  config.action_mailer.default_url_options = { host: 'gear.dawgs.run' }
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
@@ -101,7 +101,7 @@ Rails.application.configure do
       enable_starttls_auto: true  }
 
   routes.default_url_options = {
-      host: "kyle.dawgs.run",
+      host: "gear.dawgs.run",
       protocol: "https"
   }
 end
