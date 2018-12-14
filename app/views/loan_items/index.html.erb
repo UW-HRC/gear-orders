@@ -1,0 +1,23 @@
+<h1 class="mb-3">Loan Items</h1>
+<% provide(:title, "Loan Items") %>
+<%= link_to "New Loan Item", new_loan_item_path, class: 'btn btn-link' %>
+<table class="table table-sm table-bordered">
+  <thead>
+  <tr>
+    <th>Item Name</th>
+    <th>Inventory Number</th>
+    <th>Checked Out To</th>
+    <th>Last Updated</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @loan_items.each do |li| %>
+    <tr>
+      <td><%= link_to li.name, li %></td>
+      <td><%= li.inventory_number %></td>
+      <td><%= li.user ? li.user.display_name : "&mdash;".html_safe %></td>
+      <td><%= li.loan_status_updates.order(created_at: :desc).first.try(:created_at).try(:strftime, "%b %d, %Y %l:%M %p") || li.updated_at.strftime("%b %d, %Y %l:%M %p") %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

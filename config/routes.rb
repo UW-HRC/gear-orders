@@ -19,9 +19,7 @@ Rails.application.routes.draw do
   # link a purchase to an order
   post '/orders/:id/new_purchase/:item_id/:size_id', to: 'orders#create_purchase', as: 'orders_create_purchase'
 
-  # page for showing a user's orders to them
-  # this is different from /orders, because that is used by the admin interface
-  get '/my_orders', to: 'orders#index_for_user', as: 'user_orders'
+  get '/profile', to: 'users#index', as: 'user_index'
 
   # admin tools for item management
   resources :items
@@ -37,6 +35,8 @@ Rails.application.routes.draw do
   patch '/gear_sales/:id/toggle_active', to: 'gear_sales#toggle_active', as: 'toggle_sale_active'
   patch '/gear_sales/:id/toggle_open', to: 'gear_sales#toggle_open', as: 'toggle_sale_open'
 
+  resources :loan_items
+  post '/loan_items/:id/update_status', to: 'loan_items#update_status', as: 'update_loan_item_status'
 
   # user registration and management provided by Devise
   # all user management is done via SAML with a separate IdP, so we don't deal with

@@ -5,6 +5,8 @@ class User < ApplicationRecord
   }
 
   has_many :orders, dependent: :destroy
+  has_many :loan_status_updates
+  has_many :loan_items
 
   def display_name
     full_name.blank? ? email : full_name

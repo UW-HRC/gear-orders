@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181119212525) do
+ActiveRecord::Schema.define(version: 20181214192559) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,6 +42,30 @@ ActiveRecord::Schema.define(version: 20181119212525) do
     t.datetime "updated_at", null: false
     t.index ["item_id"], name: "index_items_sizes_on_item_id"
     t.index ["size_id"], name: "index_items_sizes_on_size_id"
+  end
+
+  create_table "loan_items", force: :cascade do |t|
+    t.string "name"
+    t.integer "inventory_number"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id"
+    t.index ["user_id"], name: "index_loan_items_on_user_id"
+  end
+
+  create_table "loan_status_updates", force: :cascade do |t|
+    t.bigint "loan_item_id"
+    t.bigint "user_id"
+    t.integer "status"
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "old_user_id"
+    t.bigint "author_id"
+    t.index ["author_id"], name: "index_loan_status_updates_on_author_id"
+    t.index ["loan_item_id"], name: "index_loan_status_updates_on_loan_item_id"
+    t.index ["old_user_id"], name: "index_loan_status_updates_on_old_user_id"
+    t.index ["user_id"], name: "index_loan_status_updates_on_user_id"
   end
 
   create_table "orders", force: :cascade do |t|
@@ -104,6 +128,10 @@ ActiveRecord::Schema.define(version: 20181119212525) do
   add_foreign_key "items", "gear_sales"
   add_foreign_key "items_sizes", "items"
   add_foreign_key "items_sizes", "sizes"
+  add_foreign_key "loan_status_updates", "loan_items"
+  add_foreign_key "loan_status_updates", "users"
+  add_foreign_key "loan_status_updates", "users", column: "author_id"
+  add_foreign_key "loan_status_updates", "users", column: "old_user_id"
   add_foreign_key "orders", "gear_sales"
   add_foreign_key "orders", "users"
   add_foreign_key "payments", "orders"

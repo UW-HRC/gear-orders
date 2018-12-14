@@ -1,0 +1,62 @@
+<% provide(:title, @loan_item.name) %>
+
+<h1 class="mb-1"><%= @loan_item.name %></h1>
+<p class="lead">
+  Inventory Number: <%= @loan_item.inventory_number || "&mdash;".html_safe %> <br>
+  Currently Checked Out To: <%= @loan_item.user ? @loan_item.user.display_name : "(nobody)" %>
+</p>
+
+<%= link_to "Edit Name and Inventory Number", edit_loan_item_path(@loan_item), class: 'btn btn-link' %>
+
+<div class="row mb-3">
+  <div class="col-6">
+    <div class="card">
+      <div class="card-body pb-0">
+        <h5 class="card-title mb-0">Status Updates</h5>
+      </div>
+      <hr>
+      <div class="card-body pt-0 pb-0" style="height: 300px; overflow: auto;">
+        <% @loan_item.loan_status_updates.order(created_at: :desc).each do |update| %>
+          <div class="card mb-2 p-0">
+            <div class="card-body">
+              <h6 class="card-title mb-2">
+                <% if (update.old_user.nil? && update.user.nil?) || update.old_user == update.user %>
+                  New Note
+                <% elsif !update.old_user.nil? && update.user.nil? %>
+                  Check In: <%= update.old_user.display_name %>
+                <% elsif update.old_user.nil? && !update.user.nil? %>
+                  Check Out: <%= update.user.display_name %>
+                <% else %>
+                  Transfer: <%= update.old_user.display_name %> &rarr; <%= update.user.display_name %>
+                <% end %>
+              </h6>
+              <h6 class="card-subtitle mb-1 text-muted small"><%= update.updated_at.strftime("%Y-%m-%d %l:%M %p") %> by <%= update.author.display_name %></h6>
+              <p class="card-text">
+                <%= update.notes.blank? ? '(no notes given)' : update.notes %>
+              </p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+      <hr>
+      <div class="card-body pt-1">
+        <h6>Update Item Status</h6>
+        <%= form_for @loan_item.loan_status_updates.new, local: true, url: update_loan_item_status_path(@loan_item.id), method: :post do |f| %>
+          <div class="form-group">
+            <%= f.text_area :notes, class: 'form-control', placeholder: 'Notes' %>
+          </div>
+          <div class="form-group">
+            <div class="input-group">
+              <div class="input-group-prepend"><span class="input-group-text">Checked out to</span></div>
+              <%= f.select :user_id, options_from_collection_for_select(User.all, 'id', 'display_name', @loan_item.user ? @loan_item.user.id : ""), {include_blank: '(nobody)'}, class: 'custom-select' %>
+            </div>
+          </div>
+          <div class="form-group">
+            <%= f.submit 'Update Status', class: 'btn btn-primary' %>
+          </div>
+        <% end %>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>

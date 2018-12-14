@@ -1,15 +1,16 @@
 <h1>Admin Panel</h1>
+<% provide(:title, "Admin Panel") %>
 <p class="lead">
   Howdy, <%= current_user.display_name %>.
 </p>
 
 <div class="row mb-5">
-  <div class="col">
-    <div class="card border-primary">
+  <div class="col-md">
+    <div class="card">
       <% if @active_sale %>
         <div class="card-body">
           <h5 class="card-title">
-            Active Gear Sale
+            Gear Sales
           </h5>
 
           <p class="card-text">
@@ -61,41 +62,27 @@
       <% else %>
         <div class="card-body">
           <h5 class="card-title">
-            Active Gear Sale
+            Gear Sales
           </h5>
           <p class="card-text">
             There is no active gear sale. You can reactivate an inactive sale, or <%= link_to 'create a new one', new_gear_sale_path %>.
           </p>
         </div>
+        <ul class="list-group list-group-flush">
+          <% for sale in @inactive_sales %>
+            <li class="list-group-item">
+              <span class="badge badge-pill badge-secondary"><%= sale.name %></span>
+              <%= link_to 'Edit', edit_gear_sale_path(sale), class: 'btn btn-link btn-sm' %>
+              <% unless @active_sale %><%= link_to 'Activate', toggle_sale_active_path(sale.id), method: :patch, data: {confirm: "Are you sure you want to activate this sale?"}, class: 'btn btn-info btn-sm' %>
+              <% end %></li>
+          <% end %>
+        </ul>
       <% end %>
     </div>
   </div>
 
-  <div class="col">
-    <div class="card text-muted">
-      <div class="card-body">
-        <h5 class="card-title">
-          Inactive Gear Sales
-        </h5>
-        <p class="card-text">
-          <% if @active_sale %>
-            To activate one of these sales, you need to first <%= link_to "deactivate <span class='badge badge-pill badge-primary'>#{@active_sale.name}</span>".html_safe, toggle_sale_active_path(@active_sale.id), method: :patch, data: {confirm: "Are you sure you want to deactivate this sale?"} %>.
-          <% else %>
-            Choose a sale to activate, or create a new one.
-          <% end %>
-        </p>
-      </div>
-      <ul class="list-group list-group-flush">
-        <% for sale in @inactive_sales %>
-          <li class="list-group-item">
-            <span class="badge badge-pill badge-secondary"><%= sale.name %></span>
-            <%= link_to 'Edit', edit_gear_sale_path(sale), class: 'btn btn-link btn-sm' %>
-            <% unless @active_sale %><%= link_to 'Activate', toggle_sale_active_path(sale.id), method: :patch, data: {confirm: "Are you sure you want to activate this sale?"}, class: 'btn btn-info btn-sm' %>
-            <% end %></li>
-        <% end %>
-      </ul>
-    </div>
-    <div class="card mt-4">
+  <div class="col-md">
+    <div class="card">
       <div class="card-body pb-2">
         <h5 class="card-title">User Management</h5>
       </div>
@@ -104,6 +91,19 @@
           <%= link_to 'Manage User Permissions', admin_users_path %>
           <p class="mb-1">
             <small>Set site administrators and roles.</small>
+          </p>
+        </li>
+      </ul>
+    </div>
+    <div class="card mt-4">
+      <div class="card-body pb-2">
+        <h5 class="card-title">Loan Item Management</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <%= link_to 'Manage Loan Items', loan_items_path %>
+          <p class="mb-1">
+            <small>Manage whether club items are loaned out.</small>
           </p>
         </li>
       </ul>
