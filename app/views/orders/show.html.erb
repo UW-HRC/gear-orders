@@ -109,7 +109,7 @@
           <% end %>
         </div>
         <ul class="list-group list-group-flush">
-          <% unless @order.confirmed? || !@order.gear_sale.open? %>
+          <% unless @order.confirmed? || (!@order.gear_sale.open? && !admin_signed_in?) %>
             <li class="list-group-item">
               <%= link_to 'Add Item To Order', orders_new_purchase_path(@order) %>
             </li>
