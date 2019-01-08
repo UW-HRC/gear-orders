@@ -4,7 +4,7 @@
   <div class="col-md-12">
     <h1>Order Status</h1>
     <p class="lead">
-      <%= current_user.display_name %> <span class="float-right"><%= current_user.email %></span>
+      <%= @order.user.display_name %> <span class="float-right"><%= @order.user.email %></span>
     </p>
     <% if admin_signed_in? %>
       <div class="card">
@@ -109,7 +109,7 @@
           <% end %>
         </div>
         <ul class="list-group list-group-flush">
-          <% unless @order.confirmed? %>
+          <% unless @order.confirmed? || !@order.gear_sale.open? %>
             <li class="list-group-item">
               <%= link_to 'Add Item To Order', orders_new_purchase_path(@order) %>
             </li>
