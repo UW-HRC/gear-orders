@@ -48,7 +48,7 @@ end
 def destroy
   @item.destroy
   flash[:success] = 'Item was successfully destroyed.'
-  redirect_to items_url
+  redirect_to items_path
 end
 
 private

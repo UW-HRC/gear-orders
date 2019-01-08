@@ -4,12 +4,12 @@
   <div class="col">
 
     <% if params[:only_final] %>
-        <h1>Finalized Orders</h1>
-        <%= link_to 'Show All (' + Order.all.count.to_s + ')', orders_path %>
+      <h1>Finalized Orders</h1>
+      <%= link_to 'Show All (' + Order.all.count.to_s + ')', orders_path %>
     <% else %>
-        <h1>All Orders</h1>
+      <h1>All Orders</h1>
 
-        <%= link_to 'Show only finalized (' + Order.where(confirmed: true).count.to_s + ')', orders_path(only_final: true) %>
+      <%= link_to 'Show only finalized (' + Order.where(confirmed: true).count.to_s + ')', orders_path(only_final: true) %>
     <% end %>
     <p>
       Total Revenue (from displayed orders): <b><%= number_to_currency @orders.all.reduce(0) { |acc, o| acc + o.total } %></b><br>
@@ -17,32 +17,34 @@
 
     <table class="table table-sm table-bordered">
       <thead>
-      <th>Finalized</th>
-      <th>Fulfilled</th>
-      <th>Name</th>
-      <th>Created</th>
-      <th>Updated</th>
-      <th>Total</th>
-      <th>Paid</th>
-      <th>Due</th>
-      <th>Actions</th>
+      <tr>
+        <th>Finalized</th>
+        <th>Fulfilled</th>
+        <th>Name</th>
+        <th>Created</th>
+        <th>Updated</th>
+        <th>Total</th>
+        <th>Paid</th>
+        <th>Due</th>
+        <th>Actions</th>
+      </tr>
       </thead>
       <tbody>
       <% @orders.each do |o| %>
-          <tr>
-            <td><%= link_to o.confirmed? ? '<span class=\'text-success\'>Yes'.html_safe : '<span class=\'text-warning\'>No</span>'.html_safe, toggle_finalized_path(o, all: true), method: :patch, 'data-confirm': "Toggling finalization for #{o.user.display_name}. Are you sure?" %></td>
-            <td><%= link_to o.fulfilled? ? '<span class=\'text-success\'>Yes'.html_safe : '<span class=\'text-warning\'>No</span>'.html_safe, toggle_fulfilled_path(o), method: :patch, 'data-confirm': "Toggling fulfillment for #{o.user.display_name}. Are you sure?" %></td>
-            <td><%= link_to o.user.display_name, o %></td>
-            <td><%= o.created_at.strftime '%B %d, %Y' %></td>
-            <td><%= o.updated_at.strftime '%B %d, %Y' %></td>
-            <td class="<% if o.total > 0 %>text-info<% else %>text-muted<% end %>"><%= number_to_currency o.total %></td>
-            <td><%= number_to_currency o.amount_paid %></td>
-            <% due = o.total - o.amount_paid %>
-            <td class="<% if due > 0 %>text-warning<% else %>text-success<% end %>">
-              <%= number_to_currency due %>
-            </td>
-            <td><%= link_to 'Delete', o, method: :delete, 'data-confirm': "Deleting #{o.user.display_name}. Are you sure?" %></td>
-          </tr>
+        <tr>
+          <td><%= link_to o.confirmed? ? '<span class=\'text-success\'>Yes'.html_safe : '<span class=\'text-warning\'>No</span>'.html_safe, toggle_finalized_path(o, all: true), method: :patch, 'data-confirm': "Toggling finalization for #{o.user.display_name}. Are you sure?" %></td>
+          <td><%= link_to o.fulfilled? ? '<span class=\'text-success\'>Yes'.html_safe : '<span class=\'text-warning\'>No</span>'.html_safe, toggle_fulfilled_path(o), method: :patch, 'data-confirm': "Toggling fulfillment for #{o.user.display_name}. Are you sure?" %></td>
+          <td><%= link_to o.user.display_name, o %></td>
+          <td><%= o.created_at.strftime '%B %d, %Y' %></td>
+          <td><%= o.updated_at.strftime '%B %d, %Y' %></td>
+          <td class="<% if o.total > 0 %>text-info<% else %>text-muted<% end %>"><%= number_to_currency o.total %></td>
+          <td><%= number_to_currency o.amount_paid %></td>
+          <% due = o.total - o.amount_paid %>
+          <td class="<% if due > 0 %>text-warning<% else %>text-success<% end %>">
+            <%= number_to_currency due %>
+          </td>
+          <td><%= link_to 'Delete', o, method: :delete, 'data-confirm': "Deleting #{o.user.display_name}. Are you sure?" %></td>
+        </tr>
       <% end %>
       </tbody>
     </table>

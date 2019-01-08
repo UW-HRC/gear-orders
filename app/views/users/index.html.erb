@@ -13,6 +13,16 @@
   </div>
 </div>
 
+<% if @active_sale && @active_sale.status.present? %>
+  <div class="row">
+    <div class="col">
+      <div class="alert alert-info">
+        <b>Gear Sale Status: </b><%= @active_sale.status %>
+      </div>
+    </div>
+  </div>
+<% end %>
+
 <div class="row mb-4">
   <div class="col">
     <div class="card border-primary">
@@ -24,7 +34,7 @@
       <% if @current_order %>
         <div class="card-body pt-0">
           <p class="card-text">
-            You have an order for <b><%= GearSale.active_sale.name %></b> with <b><%= @current_order.purchases.count %></b> <%= 'item'.pluralize @current_order.purchases.count %> totalling <b><%= number_to_currency @current_order.total %></b>.
+            You have an order for <b><%= @active_sale.name %></b> with <b><%= @current_order.purchases.count %></b> <%= 'item'.pluralize @current_order.purchases.count %> totalling <b><%= number_to_currency @current_order.total %></b>.
           </p>
         </div>
         <ul class="list-group list-group-flush">
@@ -36,10 +46,10 @@
             <%= link_to 'View And Edit Order', @current_order, class: 'btn btn-primary mt-3' %>
           </p>
         </div>
-      <% elsif GearSale.active_sale %>
+      <% elsif @active_sale && @active_sale.open %>
         <div class="card-body pt-0">
           <p class="card-text">
-            You don't have an order yet for this gear sale.
+            You don't have an order yet for <b><%= @active_sale.name %></b>.
             <br>
             <%= link_to 'Create An Order', orders_path, class: 'btn btn-success mt-3', method: :post %>
           </p>
@@ -48,7 +58,6 @@
         <div class="card-body pt-0">
           <p class="card-text">Gear orders are currently closed. We will make an announcement when they open.</p>
         </div>
-
       <% end %>
     </div>
   </div>
@@ -88,12 +97,12 @@
         <div class="card-body pt-0">
           <p class="card-text">You have no items on loan.</p>
         </div>
-        <% else %>
-      <ul class="list-group list-group-flush">
-        <% current_user.loan_items.order(:name).each do |li| %>
-          <li class="list-group-item"><%= li.name %><span class="float-right">Inventory Number: <%= li.inventory_number %></span></li>
-        <% end %>
-      </ul>
+      <% else %>
+        <ul class="list-group list-group-flush">
+          <% current_user.loan_items.order(:name).each do |li| %>
+            <li class="list-group-item"><%= li.name %><span class="float-right">Inventory Number: <%= li.inventory_number %></span></li>
+          <% end %>
+        </ul>
       <% end %>
     </div>
   </div>

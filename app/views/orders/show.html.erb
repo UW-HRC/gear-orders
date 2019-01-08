@@ -58,6 +58,7 @@
         <% end %>
       </tr>
       </thead>
+      <tbody>
       <% unavailable_items = false %>
       <% @order.purchases.each do |p| %>
         <% available = p.item.sizes.include?(p.size); unavailable_items ||= !available %>
@@ -134,7 +135,7 @@
       <%= link_to 'Back To All Orders', orders_path, class: 'btn btn-link mt-2' %>
     <% end %>
 
-    <%= link_to 'Back To My Orders', user_orders_path, class: 'btn btn-link mt-2' %>
+    <%= link_to 'Back To Profile', user_index_path, class: 'btn btn-link mt-2' %>
   </div>
 
   <div class="col">
