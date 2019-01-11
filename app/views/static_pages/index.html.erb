@@ -5,7 +5,7 @@
 
     <% if GearSale.active_sale && GearSale.active_sale.status.present? %>
       <div class="alert alert-info">
-        <%= GearSale.active_sale.status %>
+        <b>Gear Sale Status: </b><%= GearSale.active_sale.status %>
       </div>
     <% end %>
 
