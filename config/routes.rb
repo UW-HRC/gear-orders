@@ -28,6 +28,9 @@ Rails.application.routes.draw do
   resources :admin, only: [:index]
   get '/admin/users', to: 'admin#users', as: 'admin_users'
   patch '/admin/set_role/:id', to: 'admin#set_role', as: 'set_role'
+  get '/admin/reports', to: 'admin#sale_reports', as: 'sale_reports'
+  post '/admin/reports', to: 'admin#generate_report', as: 'generate_report'
+
 
   # index page for gear sales is provided by the admin interface
   resources :gear_sales, only: [:new, :create, :edit, :update, :destroy]

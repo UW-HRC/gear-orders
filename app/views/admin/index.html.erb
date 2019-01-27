@@ -28,6 +28,7 @@
           <li class="list-group-item"><%= link_to 'View Sales and Edit Items for Sale', items_path %></li>
           <li class="list-group-item"><%= link_to 'View Orders', orders_path %></li>
           <li class="list-group-item"><%= link_to 'Edit Name and Status', edit_gear_sale_path(@active_sale) %></li>
+          <li class="list-group-item"><%= link_to 'Get Sale Reports', sale_reports_path %></li>
           <% if @active_sale.open? %>
             <li class="list-group-item">
               <%= link_to 'Send Unfinished Order Reminder', unfinished_order_mail_path, 'data-confirm': 'About to send email. Are you sure?', method: :patch %>
