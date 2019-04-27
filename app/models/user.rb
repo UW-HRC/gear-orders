@@ -8,8 +8,14 @@ class User < ApplicationRecord
   has_many :loan_status_updates
   has_many :loan_items
 
-  def display_name
-    full_name.blank? ? email : full_name
+  def display_name(use_preferred=true)
+    if !preferred_name.blank? && use_preferred
+      preferred_name
+    elsif not full_name.blank?
+      full_name
+    else
+      email
+    end
   end
 
   # Include default devise modules. Others available are:

@@ -1,0 +1,9 @@
+<h1>Edit Profile</h1>
+
+<%= form_with model: current_user, local: true, url: update_user_profile_path do |f| %>
+  <div class="form-group">
+    <%= f.label :preferred_name %>
+    <%= f.text_field :preferred_name, class: 'form-control', placeholder: current_user.display_name(false) %>
+  </div>
+  <%= f.submit class: 'btn btn-primary' %>
+<% end %>

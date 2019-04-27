@@ -20,6 +20,8 @@ Rails.application.routes.draw do
   post '/orders/:id/new_purchase/:item_id/:size_id', to: 'orders#create_purchase', as: 'orders_create_purchase'
 
   get '/profile', to: 'users#index', as: 'user_index'
+  get '/profile/edit', to: 'users#edit', as: 'edit_user_profile'
+  patch '/profile', to: 'users#update', as: 'update_user_profile'
 
   # admin tools for item management
   resources :items

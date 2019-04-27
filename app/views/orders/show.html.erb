@@ -36,9 +36,17 @@
           </div>
         <% end %>
       <% elsif @order.gear_sale.open? %>
-        <div class="alert alert-info">
-          Add items to your order by clicking the "Add Item To Order" link below. Once you're done adding items, click "Finalize Order."
-        </div>
+        <% if @order.purchases.empty? %>
+          <div class="alert alert-info">
+            Add items to your order by clicking the "Add Item To Order" link below. Once you're done adding items, click "Place Order."
+          </div>
+        <% else %>
+          <div class="alert alert-warning">
+            Your order is not complete yet! Click
+            <%= link_to 'place order', toggle_finalized_path(@order), method: :patch, 'data-confirm': 'Once you place this order, you will be unable to change it. Are you sure?' %>
+            when you are finished adding items.
+          </div>
+        <% end %>
       <% else %>
         <div class="alert alert-warning">
           Unfortunately, gear orders are now closed for this sale. If you are still interested in ordering gear, please
@@ -115,10 +123,10 @@
             </li>
             <li class="list-group-item">
               <p class="mb-1">
-                <%= link_to 'Finalize Order', toggle_finalized_path(@order), method: :patch, 'data-confirm': 'Once you finalize this order, you will be unable to change it. Are you sure?'%>
+                <%= link_to 'Place Order', toggle_finalized_path(@order), method: :patch, 'data-confirm': 'Once you place this order, you will be unable to change it. Are you sure?'%>
               </p>
               <% unless admin_signed_in? %>
-                <small>You won't be able to make changes to your order once it's finalized.</small>
+                <small>You won't be able to make changes to your order once it's placed.</small>
               <% end %>
             </li>
           <% end %>

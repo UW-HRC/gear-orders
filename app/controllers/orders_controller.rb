@@ -98,7 +98,7 @@ class OrdersController < ApplicationController
       end
 
       @order.update_attributes confirmed: true
-      flash[:success] = 'Finalized successfully.'
+      flash[:success] = 'Order placed successfully.'
       redirect_to target
     end
   end

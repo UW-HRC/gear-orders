@@ -12,7 +12,7 @@
     <%= form_with url: generate_report_path, method: :post, local: true do |f| %>
       <h5>Report Options</h5>
       <div class="form-check">
-        <%= f.check_box :only_finalized, class: "form-check-input", id: 'only_finalized' %>
+        <%= f.check_box :only_finalized, class: "form-check-input", id: 'only_finalized', checked: true %>
         <label for="only_finalized">Only Include Finalized Orders</label>
       </div>
       <h5>Report Type</h5>
